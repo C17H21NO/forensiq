@@ -1,0 +1,4 @@
+{
+  "error": "No hay documentos legítimos cargados en el índice de referencia.",
+  "hint": "Sube documentos con POST /references/upload o usa POST /references/bootstrap-synthetic."
+}

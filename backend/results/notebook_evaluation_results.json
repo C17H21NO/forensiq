@@ -1,0 +1,170 @@
+{
+  "n_documents": 20,
+  "transformations": [
+    "mask_pii",
+    "remove_pii",
+    "shuffle_lines",
+    "drop_text",
+    "ocr_noise",
+    "heavy_redaction",
+    "paraphrase_noise",
+    "combined",
+    "ocr_reocr"
+  ],
+  "total_cases": 180,
+  "summary": [
+    {
+      "method": "sha256_exact",
+      "recall_at_1": 0.0,
+      "recall_at_5": 0.0,
+      "mrr": 0.0,
+      "fpr": 0.0,
+      "auc_roc": 0.5,
+      "avg_latency_ms": 0.77,
+      "p95_latency_ms": 1.06,
+      "total_cases": 180
+    },
+    {
+      "method": "text_only",
+      "recall_at_1": 0.9833,
+      "recall_at_5": 1.0,
+      "mrr": 0.9907,
+      "fpr": 0.0667,
+      "auc_roc": 0.9416,
+      "avg_latency_ms": 1.34,
+      "p95_latency_ms": 2.66,
+      "total_cases": 180
+    },
+    {
+      "method": "layout_only",
+      "recall_at_1": 0.0611,
+      "recall_at_5": 0.25,
+      "mrr": 0.188,
+      "fpr": 1.0,
+      "auc_roc": 0.5044,
+      "avg_latency_ms": 1.1,
+      "p95_latency_ms": 1.61,
+      "total_cases": 180
+    },
+    {
+      "method": "pii_only",
+      "recall_at_1": 0.7667,
+      "recall_at_5": 0.8167,
+      "mrr": 0.7976,
+      "fpr": 0.0629,
+      "auc_roc": 0.7878,
+      "avg_latency_ms": 1.15,
+      "p95_latency_ms": 1.7,
+      "total_cases": 180
+    },
+    {
+      "method": "text_layout",
+      "recall_at_1": 0.9722,
+      "recall_at_5": 1.0,
+      "mrr": 0.9852,
+      "fpr": 0.6968,
+      "auc_roc": 0.9404,
+      "avg_latency_ms": 1.12,
+      "p95_latency_ms": 1.54,
+      "total_cases": 180
+    },
+    {
+      "method": "text_pii",
+      "recall_at_1": 0.9833,
+      "recall_at_5": 1.0,
+      "mrr": 0.9907,
+      "fpr": 0.0398,
+      "auc_roc": 0.8858,
+      "avg_latency_ms": 1.12,
+      "p95_latency_ms": 1.53,
+      "total_cases": 180
+    },
+    {
+      "method": "layout_pii",
+      "recall_at_1": 0.7667,
+      "recall_at_5": 0.8167,
+      "mrr": 0.7997,
+      "fpr": 0.4325,
+      "auc_roc": 0.7871,
+      "avg_latency_ms": 1.13,
+      "p95_latency_ms": 1.47,
+      "total_cases": 180
+    },
+    {
+      "method": "multimodal",
+      "recall_at_1": 0.9722,
+      "recall_at_5": 1.0,
+      "mrr": 0.9852,
+      "fpr": 0.2029,
+      "auc_roc": 0.8639,
+      "avg_latency_ms": 1.05,
+      "p95_latency_ms": 1.55,
+      "total_cases": 180
+    }
+  ],
+  "multimodal_by_transformation": [
+    {
+      "transformation_type": "mask_pii",
+      "recall_at_1": 1.0,
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "cases": 20
+    },
+    {
+      "transformation_type": "remove_pii",
+      "recall_at_1": 1.0,
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "cases": 20
+    },
+    {
+      "transformation_type": "shuffle_lines",
+      "recall_at_1": 1.0,
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "cases": 20
+    },
+    {
+      "transformation_type": "drop_text",
+      "recall_at_1": 1.0,
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "cases": 20
+    },
+    {
+      "transformation_type": "ocr_noise",
+      "recall_at_1": 1.0,
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "cases": 20
+    },
+    {
+      "transformation_type": "heavy_redaction",
+      "recall_at_1": 1.0,
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "cases": 20
+    },
+    {
+      "transformation_type": "paraphrase_noise",
+      "recall_at_1": 1.0,
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "cases": 20
+    },
+    {
+      "transformation_type": "combined",
+      "recall_at_1": 0.75,
+      "recall_at_5": 1.0,
+      "mrr": 0.8667,
+      "cases": 20
+    },
+    {
+      "transformation_type": "ocr_reocr",
+      "recall_at_1": 1.0,
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "cases": 20
+    }
+  ]
+}

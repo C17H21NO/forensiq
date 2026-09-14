@@ -1,0 +1,270 @@
+﻿=== CONSTANTES DE TRANSFORMACIONES ===
+
+COMBINED_RENDER_TRANSFORMS =
+{'combo_format_noise': {'protocol_id': 'M1', 'ops': [<function t_combo_format_noise at 0x0000016DFBD9C250>], 'reorder': False, 'ext': '.docx'}, 'combo_ocr_noise': {'protocol_id': 'M2', 'ops': [<function t_combo_ocr_noise at 0x0000016DFBD9C3B0>], 'reorder': False, 'ext': '.pdf'}, 'combo_ocr_mask': {'protocol_id': 'M3', 'ops': [<function t_combo_ocr_mask at 0x0000016DFBD9C510>], 'reorder': False, 'ext': '.pdf'}, 'combo_reorder_mask': {'protocol_id': 'M4', 'ops': [<function t_combo_reorder_mask at 0x0000016DFBD9C670>], 'reorder': True, 'ext': '.pdf'}, 'combo_noise_drop': {'protocol_id': 'M5', 'ops': [<function t_combo_noise_drop at 0x0000016DFBD9C7D0>], 'reorder': False, 'ext': '.pdf'}, 'combo_reorder_noise': {'protocol_id': 'M6', 'ops': [<function t_combo_reorder_noise at 0x0000016DFBD9C930>], 'reorder': True, 'ext': '.pdf'}, 'combo_drop_case': {'protocol_id': 'M7', 'ops': [<function t_combo_drop_case at 0x0000016DFBD9CA90>], 'reorder': False, 'ext': '.pdf'}, 'combo_noise_reorder_mask': {'protocol_id': 'M8', 'ops': [<function t_combo_noise_reorder_mask at 0x0000016DFBD9CBF0>], 'reorder': True, 'ext': '.pdf'}, 'combo_drop_reorder_mask': {'protocol_id': 'M9', 'ops': [<function t_combo_drop_reorder_mask at 0x0000016DFBD9CD50>], 'reorder': True, 'ext': '.pdf'}, 'combo_strong': {'protocol_id': 'M10', 'ops': [<function t_combo_strong at 0x0000016DFBD9CEB0>], 'reorder': True, 'ext': '.pdf'}, 'visual_redacted': {'protocol_id': 'V1', 'ops': [<function t_visual_redacted at 0x0000016DFBD9C040>], 'reorder': False, 'ext': '.pdf'}, 'visual_redacted_reorder': {'protocol_id': 'V2', 'ops': [<function t_visual_redacted at 0x0000016DFBD9C040>], 'reorder': True, 'ext': '.pdf'}, 'visual_noise_redacted': {'protocol_id': 'V3', 'ops': [<function t_visual_redacted_noise at 0x0000016DFBD9D170>], 'reorder': False, 'ext': '.pdf'}, 'visual_strong': {'protocol_id': 'V4', 'ops': [<function t_visual_strong at 0x0000016DFBD9D430>], 'reorder': True, 'ext': '.pdf'}}
+
+DATA_TRANSFORMS =
+{'whitespace': <function t_whitespace at 0x0000016DFBD9B110>, 'case_punct': <function t_case_punct at 0x0000016DFBD9AFB0>, 'drop_fields': <function t_drop_fields at 0x0000016DFBD9AE50>, 'mask_pii': <function t_mask_pii at 0x0000016DFBD9ACF0>, 'ocr_noise': <function t_ocr_noise at 0x0000016DFBD9B270>, 'combined': <function t_combined at 0x0000016DFBD9B3D0>}
+
+PROTOCOL_TRANSFORMATION_MAP =
+{'format_change': 'T1', 'binary_recode': 'T2', 'whitespace': 'T3', 'ocr_reocr': 'T4', 'case_punct': 'T5', 'drop_fields': 'T6', 'reorder_blocks': 'T7', 'mask_pii': 'T8', 'combined': 'combinadas', 'combo_format_noise': 'M1', 'combo_ocr_noise': 'M2', 'combo_ocr_mask': 'M3', 'combo_reorder_mask': 'M4', 'combo_noise_drop': 'M5', 'combo_reorder_noise': 'M6', 'combo_drop_case': 'M7', 'combo_noise_reorder_mask': 'M8', 'combo_drop_reorder_mask': 'M9', 'combo_strong': 'M10', 'visual_redacted': 'V1', 'visual_redacted_reorder': 'V2', 'visual_noise_redacted': 'V3', 'visual_strong': 'V4', 'scan_low_dpi': 'S1', 'scan_low_dpi_blur': 'S2', 'scan_redacted_low_dpi': 'S3', 'scan_strong_low_dpi': 'S4'}
+
+SCAN_VISUAL_TRANSFORMS =
+{'scan_low_dpi': 'S1', 'scan_low_dpi_blur': 'S2', 'scan_redacted_low_dpi': 'S3', 'scan_strong_low_dpi': 'S4'}
+
+TRANSFORMATION_TYPES =
+['format_change', 'binary_recode', 'whitespace', 'ocr_reocr', 'case_punct', 'drop_fields', 'reorder_blocks', 'mask_pii', 'combined']
+
+VISUAL_STRESS_TRANSFORMS =
+{'visual_redacted': {'protocol_id': 'V1', 'ops': [<function t_visual_redacted at 0x0000016DFBD9C040>], 'reorder': False, 'ext': '.pdf'}, 'visual_redacted_reorder': {'protocol_id': 'V2', 'ops': [<function t_visual_redacted at 0x0000016DFBD9C040>], 'reorder': True, 'ext': '.pdf'}, 'visual_noise_redacted': {'protocol_id': 'V3', 'ops': [<function t_visual_redacted_noise at 0x0000016DFBD9D170>], 'reorder': False, 'ext': '.pdf'}, 'visual_strong': {'protocol_id': 'V4', 'ops': [<function t_visual_strong at 0x0000016DFBD9D430>], 'reorder': True, 'ext': '.pdf'}}
+
+
+=== FUNCIONES RELEVANTES ===
+
+
+--- _mask_digits ---
+def _mask_digits(value: str) -> str:
+    value = str(value)
+    if len(value) <= 4:
+        return "*" * len(value)
+    return value[:2] + "*" * (len(value) - 4) + value[-2:]
+
+
+
+--- _ocr_substitute ---
+def _ocr_substitute(value: str) -> str:
+    replacements = {"a": "@", "e": "3", "i": "1", "o": "0", "s": "5", "B": "8"}
+    chars = list(str(value))
+    for index, char in enumerate(chars):
+        if char in replacements and index % 12 == 0:
+            chars[index] = replacements[char]
+    return "".join(chars)
+
+
+
+--- apply_light_scan_noise ---
+def apply_light_scan_noise(image: Image.Image) -> Image.Image:
+    processed = ImageOps.grayscale(image)
+    processed = processed.filter(ImageFilter.GaussianBlur(radius=0.35))
+    processed = ImageOps.autocontrast(processed)
+    return processed.convert("RGB")
+
+
+
+--- generate_ocr_reocr_variant ---
+def generate_ocr_reocr_variant(file_path: str) -> dict:
+    original_path = Path(file_path)
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
+    ocr_failed = False
+    ocr_error = None
+    try:
+        image = render_pdf_first_page_to_image(str(original_path), zoom=2.0)
+        noisy = apply_light_scan_noise(image)
+        try:
+            ocr_text = pytesseract.image_to_string(noisy, lang="spa+eng").strip()
+        except Exception:
+            ocr_text = pytesseract.image_to_string(noisy).strip()
+    except Exception as exc:
+        # tesseract ausente / fallo de render: se reporta explÝcitamente en
+        # lugar de desaparecer la fila en silencio (hallazgo #9).
+        ocr_text = ""
+        ocr_failed = True
+        ocr_error = str(exc)
+
+    if not ocr_text:
+        ocr_text = "Texto no reconocido mediante OCR. Documento reprocesado para evaluacion."
+
+    variant_filename = _variant_filename("ocr_reocr", original_path.name, ".pdf")
+    variant_path = OUTPUT_DIR / variant_filename
+    _render_plain_text_pdf(ocr_text, str(variant_path))
+
+    result = {
+        "original_filename": original_path.name,
+        "original_path": str(original_path),
+        "variant_filename": variant_filename,
+        "variant_path": str(variant_path),
+        "transformation_type": "ocr_reocr",
+        "layout_preserved": False,  # un escaneo degrada el layout (realista)
+        "altered_text_preview": ocr_text[:800],
+    }
+    if ocr_failed:
+        result["ocr_failed"] = True
+        result["ocr_error"] = ocr_error
+    return result
+
+
+
+--- t_case_punct ---
+def t_case_punct(data: dict) -> dict:
+    """T5: conversi¾n de may·sculas/puntuaci¾n preservando significado."""
+    for key, value in data.items():
+        if isinstance(value, str) and value:
+            value = value.upper() if random.random() < 0.5 else value.lower()
+            value = value.replace(",", "").replace(".", "")
+            data[key] = value
+    return data
+
+
+
+--- t_combined ---
+def t_combined(data: dict) -> dict:
+    """2-3 transformaciones combinadas (escenario realista adversario nivel 2)."""
+    data = t_mask_pii(data)
+    data = t_drop_fields(data)
+    data = t_case_punct(data)
+    return data
+
+
+
+--- t_combo_drop_case ---
+def t_combo_drop_case(data: dict) -> dict:
+    """M7: eliminaci?n parcial de campos + cambios de may?sculas/puntuaci?n."""
+    data = t_drop_fields(data)
+    data = t_case_punct(data)
+    return data
+
+
+
+--- t_combo_drop_reorder_mask ---
+def t_combo_drop_reorder_mask(data: dict) -> dict:
+    """M9: eliminaci?n parcial + reordenamiento parcial + enmascaramiento de PII."""
+    data = t_drop_fields(data)
+    data = t_mask_pii(data)
+    return data
+
+
+
+--- t_combo_format_noise ---
+def t_combo_format_noise(data: dict) -> dict:
+    """M1: cambio de formato + ruido textual tipo OCR."""
+    data = t_ocr_noise(data)
+    return data
+
+
+
+--- t_combo_noise_drop ---
+def t_combo_noise_drop(data: dict) -> dict:
+    """M5: ruido OCR + eliminaci?n parcial de campos."""
+    data = t_ocr_noise(data)
+    data = t_drop_fields(data)
+    return data
+
+
+
+--- t_combo_noise_reorder_mask ---
+def t_combo_noise_reorder_mask(data: dict) -> dict:
+    """M8: ruido OCR + reordenamiento parcial + enmascaramiento de PII."""
+    data = t_ocr_noise(data)
+    data = t_mask_pii(data)
+    return data
+
+
+
+--- t_combo_ocr_mask ---
+def t_combo_ocr_mask(data: dict) -> dict:
+    """M3: degradaci?n OCR + enmascaramiento parcial de PII."""
+    data = t_ocr_noise(data)
+    data = t_mask_pii(data)
+    return data
+
+
+
+--- t_combo_ocr_noise ---
+def t_combo_ocr_noise(data: dict) -> dict:
+    """M2: degradaci?n OCR + puntuaci?n/case."""
+    data = t_ocr_noise(data)
+    data = t_case_punct(data)
+    return data
+
+
+
+--- t_combo_reorder_mask ---
+def t_combo_reorder_mask(data: dict) -> dict:
+    """M4: reordenamiento parcial + enmascaramiento de PII."""
+    data = t_mask_pii(data)
+    return data
+
+
+
+--- t_combo_reorder_noise ---
+def t_combo_reorder_noise(data: dict) -> dict:
+    """M6: reordenamiento parcial + ruido OCR."""
+    data = t_ocr_noise(data)
+    return data
+
+
+
+--- t_combo_strong ---
+def t_combo_strong(data: dict) -> dict:
+    """M10: combinaci?n fuerte nivel 2: ruido + m?scara + eliminaci?n + case/punct."""
+    data = t_ocr_noise(data)
+    data = t_mask_pii(data)
+    data = t_drop_fields(data)
+    data = t_case_punct(data)
+    return data
+
+
+
+--- t_drop_fields ---
+def t_drop_fields(data: dict) -> dict:
+    """T6: eliminaci¾n de campos. VacÝa ~45% de los campos (excepto nombre)."""
+    candidates = [k for k in data.keys() if k != "name"]
+    drop_count = max(1, int(len(candidates) * 0.45))
+    for key in random.sample(candidates, drop_count):
+        data[key] = ""
+    return data
+
+
+
+--- t_mask_pii ---
+def t_mask_pii(data: dict) -> dict:
+    """T8: anonimizaci¾n PARCIAL. Enmascara valores PII; conserva nombre,
+    montos, fechas (texto/layout siguen aportando). Colapsa el value-match de
+    PII -> caso difÝcil, exactamente lo que la rama PII debe resistir."""
+    data["dni"] = _mask_digits(data["dni"])
+    data["ruc"] = _mask_digits(data["ruc"])
+    data["phone"] = _mask_digits(data["phone"])
+    data["account"] = "[CUENTA_ENMASCARADA]"
+    data["email"] = "[EMAIL_ENMASCARADO]"
+    return data
+
+
+
+--- t_ocr_noise ---
+def t_ocr_noise(data: dict) -> dict:
+    """Ruido de caracter tipo OCR aplicado a nivel de campo (subconjunto de T4
+    sin rasterizar; el T4 'real' usa la ruta ocr_reocr)."""
+    for key, value in data.items():
+        if isinstance(value, str) and value:
+            data[key] = _ocr_substitute(value)
+    return data
+
+
+
+--- t_visual_redacted_drop ---
+def t_visual_redacted_drop(data: dict) -> dict:
+    """V3: strong redaction + partial field deletion."""
+    data = t_visual_redacted(data)
+    data = t_drop_fields(data)
+    return data
+
+
+
+--- t_visual_redacted_noise ---
+def t_visual_redacted_noise(data: dict) -> dict:
+    """V2: OCR-like noise + strong redaction."""
+    data = t_ocr_noise(data)
+    data = t_visual_redacted(data)
+    return data
+
+
+
+--- t_whitespace ---
+def t_whitespace(data: dict) -> dict:
+    """T3: cambios cosmÚticos de espacios."""
+    for key, value in data.items():
+        if isinstance(value, str) and value:
+            data[key] = value.replace(" ", "  ")
+    return data
+

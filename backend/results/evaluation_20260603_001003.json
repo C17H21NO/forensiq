@@ -1,0 +1,1958 @@
+{
+  "config": {
+    "n_legit": 500,
+    "n_distractors": 200,
+    "seed": 42,
+    "weight_mode": "fixed",
+    "test_fraction": 0.2,
+    "val_fraction": 0.2,
+    "bootstrap_iters": 1000,
+    "top_k": 5,
+    "transformations": null
+  },
+  "environment": {
+    "sklearn": true,
+    "scipy": true,
+    "tlsh": false,
+    "semantic_model": "paraphrase-multilingual-MiniLM-L12-v2 (384d; protocolo §4.1 sugiere BGE-m3/e5-large 1024d)"
+  },
+  "split_sizes": {
+    "train_families": 300,
+    "val_families": 100,
+    "test_families": 100,
+    "test_distractors": 40,
+    "dev_distractors": 160
+  },
+  "tuned_weights": null,
+  "proposed_method": "multimodal",
+  "no_layout_method": "text_pii",
+  "summary": {
+    "sha256_exact": {
+      "method": "sha256_exact",
+      "description": "SHA-256 exacto (cota inferior).",
+      "threshold": 0.0,
+      "recall_at_1": 0.0,
+      "recall_at_1_ci": [
+        0.0,
+        0.0
+      ],
+      "recall_at_5": 0.0,
+      "recall_at_5_ci": [
+        0.0,
+        0.0
+      ],
+      "mrr": 0.0,
+      "mrr_ci": [
+        0.0,
+        0.0
+      ],
+      "fpr": 0.0,
+      "detection_rate": 0.0,
+      "auc_detection": 0.5,
+      "avg_latency_ms": 13.92,
+      "p95_latency_ms": 25.71,
+      "n_test_cases": 1800,
+      "n_test_distractors": 40,
+      "all_zero_test_cases": 1800,
+      "by_transformation": [
+        {
+          "transformation_type": "binary_recode",
+          "protocol_id": "T2",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "case_punct",
+          "protocol_id": "T5",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_drop_case",
+          "protocol_id": "M7",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_drop_reorder_mask",
+          "protocol_id": "M9",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_format_noise",
+          "protocol_id": "M1",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_noise_drop",
+          "protocol_id": "M5",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_noise_reorder_mask",
+          "protocol_id": "M8",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_ocr_mask",
+          "protocol_id": "M3",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_ocr_noise",
+          "protocol_id": "M2",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_reorder_mask",
+          "protocol_id": "M4",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_reorder_noise",
+          "protocol_id": "M6",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_strong",
+          "protocol_id": "M10",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "drop_fields",
+          "protocol_id": "T6",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "format_change",
+          "protocol_id": "T1",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "mask_pii",
+          "protocol_id": "T8",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "ocr_reocr",
+          "protocol_id": "T4",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "reorder_blocks",
+          "protocol_id": "T7",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "whitespace",
+          "protocol_id": "T3",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 100
+        }
+      ]
+    },
+    "tlsh_text": {
+      "method": "tlsh_text",
+      "description": "TLSH sobre texto extraído normalizado.",
+      "threshold": 0.0,
+      "recall_at_1": 0.0,
+      "recall_at_1_ci": [
+        0.0,
+        0.0
+      ],
+      "recall_at_5": 0.0,
+      "recall_at_5_ci": [
+        0.0,
+        0.0
+      ],
+      "mrr": 0.0,
+      "mrr_ci": [
+        0.0,
+        0.0
+      ],
+      "fpr": 0.0,
+      "detection_rate": 0.0,
+      "auc_detection": 0.5,
+      "avg_latency_ms": 0.65,
+      "p95_latency_ms": 1.0,
+      "n_test_cases": 1800,
+      "n_test_distractors": 40,
+      "all_zero_test_cases": 1800,
+      "by_transformation": [
+        {
+          "transformation_type": "binary_recode",
+          "protocol_id": "T2",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "case_punct",
+          "protocol_id": "T5",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_drop_case",
+          "protocol_id": "M7",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_drop_reorder_mask",
+          "protocol_id": "M9",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_format_noise",
+          "protocol_id": "M1",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_noise_drop",
+          "protocol_id": "M5",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_noise_reorder_mask",
+          "protocol_id": "M8",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_ocr_mask",
+          "protocol_id": "M3",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_ocr_noise",
+          "protocol_id": "M2",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_reorder_mask",
+          "protocol_id": "M4",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_reorder_noise",
+          "protocol_id": "M6",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_strong",
+          "protocol_id": "M10",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "drop_fields",
+          "protocol_id": "T6",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "format_change",
+          "protocol_id": "T1",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "mask_pii",
+          "protocol_id": "T8",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "ocr_reocr",
+          "protocol_id": "T4",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "reorder_blocks",
+          "protocol_id": "T7",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "whitespace",
+          "protocol_id": "T3",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 100
+        }
+      ]
+    },
+    "text_only": {
+      "method": "text_only",
+      "description": "A: solo texto (híbrido).",
+      "threshold": 0.8949,
+      "recall_at_1": 0.9606,
+      "recall_at_1_ci": [
+        0.9517,
+        0.97
+      ],
+      "recall_at_5": 0.9661,
+      "recall_at_5_ci": [
+        0.9578,
+        0.9739
+      ],
+      "mrr": 0.9635,
+      "mrr_ci": [
+        0.955,
+        0.9721
+      ],
+      "fpr": 0.175,
+      "detection_rate": 0.7889,
+      "auc_detection": 0.8207,
+      "avg_latency_ms": 24.97,
+      "p95_latency_ms": 29.86,
+      "n_test_cases": 1800,
+      "n_test_distractors": 40,
+      "all_zero_test_cases": 0,
+      "by_transformation": [
+        {
+          "transformation_type": "binary_recode",
+          "protocol_id": "T2",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "case_punct",
+          "protocol_id": "T5",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_drop_case",
+          "protocol_id": "M7",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_drop_reorder_mask",
+          "protocol_id": "M9",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_format_noise",
+          "protocol_id": "M1",
+          "recall_at_1": 0.64,
+          "recall_at_5": 0.67,
+          "mrr": 0.6588,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_noise_drop",
+          "protocol_id": "M5",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_noise_reorder_mask",
+          "protocol_id": "M8",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_ocr_mask",
+          "protocol_id": "M3",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_ocr_noise",
+          "protocol_id": "M2",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_reorder_mask",
+          "protocol_id": "M4",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_reorder_noise",
+          "protocol_id": "M6",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_strong",
+          "protocol_id": "M10",
+          "recall_at_1": 0.99,
+          "recall_at_5": 1.0,
+          "mrr": 0.992,
+          "n": 100
+        },
+        {
+          "transformation_type": "drop_fields",
+          "protocol_id": "T6",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "format_change",
+          "protocol_id": "T1",
+          "recall_at_1": 0.66,
+          "recall_at_5": 0.72,
+          "mrr": 0.6931,
+          "n": 100
+        },
+        {
+          "transformation_type": "mask_pii",
+          "protocol_id": "T8",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "ocr_reocr",
+          "protocol_id": "T4",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "reorder_blocks",
+          "protocol_id": "T7",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "whitespace",
+          "protocol_id": "T3",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        }
+      ]
+    },
+    "layout_only": {
+      "method": "layout_only",
+      "description": "C: solo layout.",
+      "threshold": 0.0,
+      "recall_at_1": 0.0,
+      "recall_at_1_ci": [
+        0.0,
+        0.0
+      ],
+      "recall_at_5": 0.0378,
+      "recall_at_5_ci": [
+        0.0289,
+        0.0467
+      ],
+      "mrr": 0.0444,
+      "mrr_ci": [
+        0.0417,
+        0.0472
+      ],
+      "fpr": 1.0,
+      "detection_rate": 0.8889,
+      "auc_detection": 0.3369,
+      "avg_latency_ms": 25.75,
+      "p95_latency_ms": 30.74,
+      "n_test_cases": 1800,
+      "n_test_distractors": 40,
+      "all_zero_test_cases": 200,
+      "by_transformation": [
+        {
+          "transformation_type": "binary_recode",
+          "protocol_id": "T2",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.05,
+          "mrr": 0.0596,
+          "n": 100
+        },
+        {
+          "transformation_type": "case_punct",
+          "protocol_id": "T5",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.07,
+          "mrr": 0.0682,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_drop_case",
+          "protocol_id": "M7",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.05,
+          "mrr": 0.042,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_drop_reorder_mask",
+          "protocol_id": "M9",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.01,
+          "mrr": 0.0326,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_format_noise",
+          "protocol_id": "M1",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_noise_drop",
+          "protocol_id": "M5",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.02,
+          "mrr": 0.0353,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_noise_reorder_mask",
+          "protocol_id": "M8",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.05,
+          "mrr": 0.0588,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_ocr_mask",
+          "protocol_id": "M3",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.05,
+          "mrr": 0.0588,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_ocr_noise",
+          "protocol_id": "M2",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.06,
+          "mrr": 0.0668,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_reorder_mask",
+          "protocol_id": "M4",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.06,
+          "mrr": 0.0595,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_reorder_noise",
+          "protocol_id": "M6",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.05,
+          "mrr": 0.0593,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_strong",
+          "protocol_id": "M10",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.02,
+          "mrr": 0.0322,
+          "n": 100
+        },
+        {
+          "transformation_type": "drop_fields",
+          "protocol_id": "T6",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.02,
+          "mrr": 0.0367,
+          "n": 100
+        },
+        {
+          "transformation_type": "format_change",
+          "protocol_id": "T1",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "mask_pii",
+          "protocol_id": "T8",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.06,
+          "mrr": 0.0595,
+          "n": 100
+        },
+        {
+          "transformation_type": "ocr_reocr",
+          "protocol_id": "T4",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.01,
+          "mrr": 0.0113,
+          "n": 100
+        },
+        {
+          "transformation_type": "reorder_blocks",
+          "protocol_id": "T7",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.05,
+          "mrr": 0.0596,
+          "n": 100
+        },
+        {
+          "transformation_type": "whitespace",
+          "protocol_id": "T3",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.05,
+          "mrr": 0.0596,
+          "n": 100
+        }
+      ]
+    },
+    "pii_only": {
+      "method": "pii_only",
+      "description": "B: solo PII.",
+      "threshold": 0.5303,
+      "recall_at_1": 0.5889,
+      "recall_at_1_ci": [
+        0.5678,
+        0.6094
+      ],
+      "recall_at_5": 0.5889,
+      "recall_at_5_ci": [
+        0.5683,
+        0.6111
+      ],
+      "mrr": 0.5889,
+      "mrr_ci": [
+        0.5667,
+        0.6129
+      ],
+      "fpr": 0.0,
+      "detection_rate": 0.5656,
+      "auc_detection": 0.5731,
+      "avg_latency_ms": 25.68,
+      "p95_latency_ms": 30.7,
+      "n_test_cases": 1800,
+      "n_test_distractors": 40,
+      "all_zero_test_cases": 737,
+      "by_transformation": [
+        {
+          "transformation_type": "binary_recode",
+          "protocol_id": "T2",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "case_punct",
+          "protocol_id": "T5",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_drop_case",
+          "protocol_id": "M7",
+          "recall_at_1": 0.46,
+          "recall_at_5": 0.46,
+          "mrr": 0.46,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_drop_reorder_mask",
+          "protocol_id": "M9",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_format_noise",
+          "protocol_id": "M1",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_noise_drop",
+          "protocol_id": "M5",
+          "recall_at_1": 0.54,
+          "recall_at_5": 0.54,
+          "mrr": 0.5409,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_noise_reorder_mask",
+          "protocol_id": "M8",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_ocr_mask",
+          "protocol_id": "M3",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_ocr_noise",
+          "protocol_id": "M2",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_reorder_mask",
+          "protocol_id": "M4",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_reorder_noise",
+          "protocol_id": "M6",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_strong",
+          "protocol_id": "M10",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "drop_fields",
+          "protocol_id": "T6",
+          "recall_at_1": 0.6,
+          "recall_at_5": 0.6,
+          "mrr": 0.6,
+          "n": 100
+        },
+        {
+          "transformation_type": "format_change",
+          "protocol_id": "T1",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "mask_pii",
+          "protocol_id": "T8",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "ocr_reocr",
+          "protocol_id": "T4",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "reorder_blocks",
+          "protocol_id": "T7",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "whitespace",
+          "protocol_id": "T3",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        }
+      ]
+    },
+    "text_layout": {
+      "method": "text_layout",
+      "description": "D: texto + layout (sin PII).",
+      "threshold": 0.9335,
+      "recall_at_1": 0.9606,
+      "recall_at_1_ci": [
+        0.9511,
+        0.9689
+      ],
+      "recall_at_5": 0.9661,
+      "recall_at_5_ci": [
+        0.9578,
+        0.9739
+      ],
+      "mrr": 0.9635,
+      "mrr_ci": [
+        0.9551,
+        0.9722
+      ],
+      "fpr": 0.175,
+      "detection_rate": 0.7844,
+      "auc_detection": 0.8174,
+      "avg_latency_ms": 25.75,
+      "p95_latency_ms": 30.7,
+      "n_test_cases": 1800,
+      "n_test_distractors": 40,
+      "all_zero_test_cases": 0,
+      "by_transformation": [
+        {
+          "transformation_type": "binary_recode",
+          "protocol_id": "T2",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "case_punct",
+          "protocol_id": "T5",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_drop_case",
+          "protocol_id": "M7",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_drop_reorder_mask",
+          "protocol_id": "M9",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_format_noise",
+          "protocol_id": "M1",
+          "recall_at_1": 0.64,
+          "recall_at_5": 0.67,
+          "mrr": 0.6588,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_noise_drop",
+          "protocol_id": "M5",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_noise_reorder_mask",
+          "protocol_id": "M8",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_ocr_mask",
+          "protocol_id": "M3",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_ocr_noise",
+          "protocol_id": "M2",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_reorder_mask",
+          "protocol_id": "M4",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_reorder_noise",
+          "protocol_id": "M6",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_strong",
+          "protocol_id": "M10",
+          "recall_at_1": 0.99,
+          "recall_at_5": 1.0,
+          "mrr": 0.992,
+          "n": 100
+        },
+        {
+          "transformation_type": "drop_fields",
+          "protocol_id": "T6",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "format_change",
+          "protocol_id": "T1",
+          "recall_at_1": 0.66,
+          "recall_at_5": 0.72,
+          "mrr": 0.6931,
+          "n": 100
+        },
+        {
+          "transformation_type": "mask_pii",
+          "protocol_id": "T8",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "ocr_reocr",
+          "protocol_id": "T4",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "reorder_blocks",
+          "protocol_id": "T7",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "whitespace",
+          "protocol_id": "T3",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        }
+      ]
+    },
+    "text_pii": {
+      "method": "text_pii",
+      "description": "E: texto + PII (sin layout).",
+      "threshold": 0.6918,
+      "recall_at_1": 0.9994,
+      "recall_at_1_ci": [
+        0.9983,
+        1.0
+      ],
+      "recall_at_5": 1.0,
+      "recall_at_5_ci": [
+        1.0,
+        1.0
+      ],
+      "mrr": 0.9996,
+      "mrr_ci": [
+        0.9987,
+        1.0
+      ],
+      "fpr": 0.025,
+      "detection_rate": 0.4956,
+      "auc_detection": 0.528,
+      "avg_latency_ms": 25.76,
+      "p95_latency_ms": 30.79,
+      "n_test_cases": 1800,
+      "n_test_distractors": 40,
+      "all_zero_test_cases": 0,
+      "by_transformation": [
+        {
+          "transformation_type": "binary_recode",
+          "protocol_id": "T2",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "case_punct",
+          "protocol_id": "T5",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_drop_case",
+          "protocol_id": "M7",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_drop_reorder_mask",
+          "protocol_id": "M9",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_format_noise",
+          "protocol_id": "M1",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_noise_drop",
+          "protocol_id": "M5",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_noise_reorder_mask",
+          "protocol_id": "M8",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_ocr_mask",
+          "protocol_id": "M3",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_ocr_noise",
+          "protocol_id": "M2",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_reorder_mask",
+          "protocol_id": "M4",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_reorder_noise",
+          "protocol_id": "M6",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_strong",
+          "protocol_id": "M10",
+          "recall_at_1": 0.99,
+          "recall_at_5": 1.0,
+          "mrr": 0.992,
+          "n": 100
+        },
+        {
+          "transformation_type": "drop_fields",
+          "protocol_id": "T6",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "format_change",
+          "protocol_id": "T1",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "mask_pii",
+          "protocol_id": "T8",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "ocr_reocr",
+          "protocol_id": "T4",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "reorder_blocks",
+          "protocol_id": "T7",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "whitespace",
+          "protocol_id": "T3",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        }
+      ]
+    },
+    "layout_pii": {
+      "method": "layout_pii",
+      "description": "F: layout + PII (sin texto).",
+      "threshold": 0.6747,
+      "recall_at_1": 0.5889,
+      "recall_at_1_ci": [
+        0.5661,
+        0.6122
+      ],
+      "recall_at_5": 0.5917,
+      "recall_at_5_ci": [
+        0.5683,
+        0.6145
+      ],
+      "mrr": 0.6028,
+      "mrr_ci": [
+        0.5802,
+        0.6235
+      ],
+      "fpr": 0.0,
+      "detection_rate": 0.4661,
+      "auc_detection": 0.4664,
+      "avg_latency_ms": 62.71,
+      "p95_latency_ms": 102.13,
+      "n_test_cases": 1800,
+      "n_test_distractors": 40,
+      "all_zero_test_cases": 0,
+      "by_transformation": [
+        {
+          "transformation_type": "binary_recode",
+          "protocol_id": "T2",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "case_punct",
+          "protocol_id": "T5",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_drop_case",
+          "protocol_id": "M7",
+          "recall_at_1": 0.46,
+          "recall_at_5": 0.46,
+          "mrr": 0.4712,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_drop_reorder_mask",
+          "protocol_id": "M9",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.01,
+          "mrr": 0.0336,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_format_noise",
+          "protocol_id": "M1",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_noise_drop",
+          "protocol_id": "M5",
+          "recall_at_1": 0.54,
+          "recall_at_5": 0.54,
+          "mrr": 0.5472,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_noise_reorder_mask",
+          "protocol_id": "M8",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.01,
+          "mrr": 0.0406,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_ocr_mask",
+          "protocol_id": "M3",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.01,
+          "mrr": 0.0406,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_ocr_noise",
+          "protocol_id": "M2",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_reorder_mask",
+          "protocol_id": "M4",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.01,
+          "mrr": 0.0406,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_reorder_noise",
+          "protocol_id": "M6",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_strong",
+          "protocol_id": "M10",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.031,
+          "n": 100
+        },
+        {
+          "transformation_type": "drop_fields",
+          "protocol_id": "T6",
+          "recall_at_1": 0.6,
+          "recall_at_5": 0.6,
+          "mrr": 0.6051,
+          "n": 100
+        },
+        {
+          "transformation_type": "format_change",
+          "protocol_id": "T1",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "mask_pii",
+          "protocol_id": "T8",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.01,
+          "mrr": 0.0406,
+          "n": 100
+        },
+        {
+          "transformation_type": "ocr_reocr",
+          "protocol_id": "T4",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "reorder_blocks",
+          "protocol_id": "T7",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "whitespace",
+          "protocol_id": "T3",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        }
+      ]
+    },
+    "multimodal": {
+      "method": "multimodal",
+      "description": "G: huella multimodal propuesta (texto híbrido).",
+      "threshold": 0.7536,
+      "recall_at_1": 0.9994,
+      "recall_at_1_ci": [
+        0.9978,
+        1.0
+      ],
+      "recall_at_5": 1.0,
+      "recall_at_5_ci": [
+        1.0,
+        1.0
+      ],
+      "mrr": 0.9996,
+      "mrr_ci": [
+        0.9987,
+        1.0
+      ],
+      "fpr": 0.025,
+      "detection_rate": 0.4556,
+      "auc_detection": 0.4718,
+      "avg_latency_ms": 96.65,
+      "p95_latency_ms": 104.42,
+      "n_test_cases": 1800,
+      "n_test_distractors": 40,
+      "all_zero_test_cases": 0,
+      "by_transformation": [
+        {
+          "transformation_type": "binary_recode",
+          "protocol_id": "T2",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "case_punct",
+          "protocol_id": "T5",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_drop_case",
+          "protocol_id": "M7",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_drop_reorder_mask",
+          "protocol_id": "M9",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_format_noise",
+          "protocol_id": "M1",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_noise_drop",
+          "protocol_id": "M5",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_noise_reorder_mask",
+          "protocol_id": "M8",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_ocr_mask",
+          "protocol_id": "M3",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_ocr_noise",
+          "protocol_id": "M2",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_reorder_mask",
+          "protocol_id": "M4",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_reorder_noise",
+          "protocol_id": "M6",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_strong",
+          "protocol_id": "M10",
+          "recall_at_1": 0.99,
+          "recall_at_5": 1.0,
+          "mrr": 0.992,
+          "n": 100
+        },
+        {
+          "transformation_type": "drop_fields",
+          "protocol_id": "T6",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "format_change",
+          "protocol_id": "T1",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "mask_pii",
+          "protocol_id": "T8",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "ocr_reocr",
+          "protocol_id": "T4",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "reorder_blocks",
+          "protocol_id": "T7",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "whitespace",
+          "protocol_id": "T3",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        }
+      ]
+    },
+    "multimodal_lexical": {
+      "method": "multimodal_lexical",
+      "description": "G con texto solo léxico (TF).",
+      "threshold": 0.7506,
+      "recall_at_1": 1.0,
+      "recall_at_1_ci": [
+        1.0,
+        1.0
+      ],
+      "recall_at_5": 1.0,
+      "recall_at_5_ci": [
+        1.0,
+        1.0
+      ],
+      "mrr": 1.0,
+      "mrr_ci": [
+        1.0,
+        1.0
+      ],
+      "fpr": 0.0,
+      "detection_rate": 0.4561,
+      "auc_detection": 0.4733,
+      "avg_latency_ms": 98.42,
+      "p95_latency_ms": 104.89,
+      "n_test_cases": 1800,
+      "n_test_distractors": 40,
+      "all_zero_test_cases": 0,
+      "by_transformation": [
+        {
+          "transformation_type": "binary_recode",
+          "protocol_id": "T2",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "case_punct",
+          "protocol_id": "T5",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_drop_case",
+          "protocol_id": "M7",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_drop_reorder_mask",
+          "protocol_id": "M9",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_format_noise",
+          "protocol_id": "M1",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_noise_drop",
+          "protocol_id": "M5",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_noise_reorder_mask",
+          "protocol_id": "M8",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_ocr_mask",
+          "protocol_id": "M3",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_ocr_noise",
+          "protocol_id": "M2",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_reorder_mask",
+          "protocol_id": "M4",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_reorder_noise",
+          "protocol_id": "M6",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_strong",
+          "protocol_id": "M10",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "drop_fields",
+          "protocol_id": "T6",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "format_change",
+          "protocol_id": "T1",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "mask_pii",
+          "protocol_id": "T8",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "ocr_reocr",
+          "protocol_id": "T4",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "reorder_blocks",
+          "protocol_id": "T7",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "whitespace",
+          "protocol_id": "T3",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        }
+      ]
+    },
+    "multimodal_semantic": {
+      "method": "multimodal_semantic",
+      "description": "G con texto solo SBERT.",
+      "threshold": 0.7705,
+      "recall_at_1": 0.9283,
+      "recall_at_1_ci": [
+        0.9161,
+        0.9394
+      ],
+      "recall_at_5": 0.9594,
+      "recall_at_5_ci": [
+        0.9494,
+        0.9683
+      ],
+      "mrr": 0.9428,
+      "mrr_ci": [
+        0.9328,
+        0.9525
+      ],
+      "fpr": 0.0,
+      "detection_rate": 0.4539,
+      "auc_detection": 0.4612,
+      "avg_latency_ms": 98.96,
+      "p95_latency_ms": 105.91,
+      "n_test_cases": 1800,
+      "n_test_distractors": 40,
+      "all_zero_test_cases": 0,
+      "by_transformation": [
+        {
+          "transformation_type": "binary_recode",
+          "protocol_id": "T2",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "case_punct",
+          "protocol_id": "T5",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_drop_case",
+          "protocol_id": "M7",
+          "recall_at_1": 0.74,
+          "recall_at_5": 0.83,
+          "mrr": 0.7805,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_drop_reorder_mask",
+          "protocol_id": "M9",
+          "recall_at_1": 0.8,
+          "recall_at_5": 0.92,
+          "mrr": 0.846,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_format_noise",
+          "protocol_id": "M1",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_noise_drop",
+          "protocol_id": "M5",
+          "recall_at_1": 0.96,
+          "recall_at_5": 0.99,
+          "mrr": 0.9737,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_noise_reorder_mask",
+          "protocol_id": "M8",
+          "recall_at_1": 0.93,
+          "recall_at_5": 0.96,
+          "mrr": 0.9463,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_ocr_mask",
+          "protocol_id": "M3",
+          "recall_at_1": 0.93,
+          "recall_at_5": 0.96,
+          "mrr": 0.9463,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_ocr_noise",
+          "protocol_id": "M2",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_reorder_mask",
+          "protocol_id": "M4",
+          "recall_at_1": 0.99,
+          "recall_at_5": 1.0,
+          "mrr": 0.995,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_reorder_noise",
+          "protocol_id": "M6",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "combo_strong",
+          "protocol_id": "M10",
+          "recall_at_1": 0.38,
+          "recall_at_5": 0.61,
+          "mrr": 0.4927,
+          "n": 100
+        },
+        {
+          "transformation_type": "drop_fields",
+          "protocol_id": "T6",
+          "recall_at_1": 0.99,
+          "recall_at_5": 1.0,
+          "mrr": 0.995,
+          "n": 100
+        },
+        {
+          "transformation_type": "format_change",
+          "protocol_id": "T1",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "mask_pii",
+          "protocol_id": "T8",
+          "recall_at_1": 0.99,
+          "recall_at_5": 1.0,
+          "mrr": 0.995,
+          "n": 100
+        },
+        {
+          "transformation_type": "ocr_reocr",
+          "protocol_id": "T4",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "reorder_blocks",
+          "protocol_id": "T7",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        },
+        {
+          "transformation_type": "whitespace",
+          "protocol_id": "T3",
+          "recall_at_1": 1.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "n": 100
+        }
+      ]
+    }
+  },
+  "significance_G_vs_E": {
+    "comparison": "multimodal (G) vs text_pii (E)",
+    "n_paired_cases": 1800,
+    "mcnemar_b_G_hits_E_miss": 0,
+    "mcnemar_c_E_hits_G_miss": 0,
+    "mcnemar_p_value": null,
+    "wilcoxon_p_value": null,
+    "recall_at_1_diff_G_minus_E": 0.0,
+    "recall_at_1_diff_ci": [
+      0.0,
+      0.0
+    ]
+  }
+}

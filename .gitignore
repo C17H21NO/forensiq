@@ -1,0 +1,64 @@
+﻿# ============================================================
+# ForensiQ - archivos locales / sensibles / generados
+# ============================================================
+
+# --- Secrets / environment ---
+.env
+.env.*
+!.env.example
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# --- Python virtual environments ---
+.venv/
+venv/
+env/
+
+# --- Local databases ---
+*.sqlite
+*.sqlite3
+*.db
+*.sqlite3-journal
+*.sqlite3-shm
+*.sqlite3-wal
+
+# --- ForensiQ runtime storage ---
+backend/app/uploads/
+backend/smoke_storage/
+
+# --- Logs / temporary files ---
+*.log
+*.tmp
+*.temp
+*.bak
+~$*
+.DS_Store
+Thumbs.db
+
+# --- Node / React ---
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/.vite/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# --- IDE ---
+.vscode/
+.idea/
+
+# --- OS / Python packaging ---
+dist/
+build/
+*.egg-info/

@@ -1,0 +1,731 @@
+{
+  "config": {
+    "n_legit": 250,
+    "n_distractors": 100,
+    "seed": 42,
+    "weight_mode": "fixed",
+    "test_fraction": 0.2,
+    "val_fraction": 0.2,
+    "bootstrap_iters": 500,
+    "top_k": 5,
+    "transformations": [
+      "visual_redacted",
+      "visual_redacted_reorder",
+      "visual_noise_redacted",
+      "visual_strong"
+    ]
+  },
+  "environment": {
+    "sklearn": true,
+    "scipy": true,
+    "tlsh": false,
+    "semantic_model": "paraphrase-multilingual-MiniLM-L12-v2 (384d; protocolo §4.1 sugiere BGE-m3/e5-large 1024d)"
+  },
+  "split_sizes": {
+    "train_families": 150,
+    "val_families": 50,
+    "test_families": 50,
+    "test_distractors": 20,
+    "dev_distractors": 80
+  },
+  "tuned_weights": null,
+  "proposed_method": "multimodal",
+  "no_layout_method": "text_pii",
+  "summary": {
+    "sha256_exact": {
+      "method": "sha256_exact",
+      "description": "SHA-256 exacto (cota inferior).",
+      "threshold": 0.0,
+      "recall_at_1": 0.0,
+      "recall_at_1_ci": [
+        0.0,
+        0.0
+      ],
+      "recall_at_5": 0.0,
+      "recall_at_5_ci": [
+        0.0,
+        0.0
+      ],
+      "mrr": 0.0,
+      "mrr_ci": [
+        0.0,
+        0.0
+      ],
+      "fpr": 0.0,
+      "detection_rate": 0.0,
+      "auc_detection": 0.5,
+      "avg_latency_ms": 0.51,
+      "p95_latency_ms": 0.71,
+      "n_test_cases": 200,
+      "n_test_distractors": 20,
+      "all_zero_test_cases": 200,
+      "by_transformation": [
+        {
+          "transformation_type": "visual_noise_redacted",
+          "protocol_id": "V3",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 50
+        },
+        {
+          "transformation_type": "visual_redacted",
+          "protocol_id": "V1",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 50
+        },
+        {
+          "transformation_type": "visual_redacted_reorder",
+          "protocol_id": "V2",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 50
+        },
+        {
+          "transformation_type": "visual_strong",
+          "protocol_id": "V4",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 50
+        }
+      ]
+    },
+    "tlsh_text": {
+      "method": "tlsh_text",
+      "description": "TLSH sobre texto extraído normalizado.",
+      "threshold": 0.0,
+      "recall_at_1": 0.0,
+      "recall_at_1_ci": [
+        0.0,
+        0.0
+      ],
+      "recall_at_5": 0.0,
+      "recall_at_5_ci": [
+        0.0,
+        0.0
+      ],
+      "mrr": 0.0,
+      "mrr_ci": [
+        0.0,
+        0.0
+      ],
+      "fpr": 0.0,
+      "detection_rate": 0.0,
+      "auc_detection": 0.5,
+      "avg_latency_ms": 0.36,
+      "p95_latency_ms": 0.57,
+      "n_test_cases": 200,
+      "n_test_distractors": 20,
+      "all_zero_test_cases": 200,
+      "by_transformation": [
+        {
+          "transformation_type": "visual_noise_redacted",
+          "protocol_id": "V3",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 50
+        },
+        {
+          "transformation_type": "visual_redacted",
+          "protocol_id": "V1",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 50
+        },
+        {
+          "transformation_type": "visual_redacted_reorder",
+          "protocol_id": "V2",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 50
+        },
+        {
+          "transformation_type": "visual_strong",
+          "protocol_id": "V4",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 50
+        }
+      ]
+    },
+    "text_only": {
+      "method": "text_only",
+      "description": "A: solo texto (híbrido).",
+      "threshold": 0.9416,
+      "recall_at_1": 0.39,
+      "recall_at_1_ci": [
+        0.315,
+        0.4626
+      ],
+      "recall_at_5": 0.675,
+      "recall_at_5_ci": [
+        0.61,
+        0.745
+      ],
+      "mrr": 0.5047,
+      "mrr_ci": [
+        0.4527,
+        0.559
+      ],
+      "fpr": 0.0,
+      "detection_rate": 0.005,
+      "auc_detection": 0.2671,
+      "avg_latency_ms": 15.33,
+      "p95_latency_ms": 19.91,
+      "n_test_cases": 200,
+      "n_test_distractors": 20,
+      "all_zero_test_cases": 0,
+      "by_transformation": [
+        {
+          "transformation_type": "visual_noise_redacted",
+          "protocol_id": "V3",
+          "recall_at_1": 0.38,
+          "recall_at_5": 0.68,
+          "mrr": 0.4971,
+          "n": 50
+        },
+        {
+          "transformation_type": "visual_redacted",
+          "protocol_id": "V1",
+          "recall_at_1": 0.38,
+          "recall_at_5": 0.68,
+          "mrr": 0.4971,
+          "n": 50
+        },
+        {
+          "transformation_type": "visual_redacted_reorder",
+          "protocol_id": "V2",
+          "recall_at_1": 0.38,
+          "recall_at_5": 0.68,
+          "mrr": 0.4971,
+          "n": 50
+        },
+        {
+          "transformation_type": "visual_strong",
+          "protocol_id": "V4",
+          "recall_at_1": 0.42,
+          "recall_at_5": 0.66,
+          "mrr": 0.5277,
+          "n": 50
+        }
+      ]
+    },
+    "layout_only": {
+      "method": "layout_only",
+      "description": "C: solo layout.",
+      "threshold": 0.9997,
+      "recall_at_1": 0.155,
+      "recall_at_1_ci": [
+        0.1074,
+        0.205
+      ],
+      "recall_at_5": 0.53,
+      "recall_at_5_ci": [
+        0.46,
+        0.595
+      ],
+      "mrr": 0.3262,
+      "mrr_ci": [
+        0.2847,
+        0.3687
+      ],
+      "fpr": 1.0,
+      "detection_rate": 1.0,
+      "auc_detection": 0.5275,
+      "avg_latency_ms": 15.14,
+      "p95_latency_ms": 19.74,
+      "n_test_cases": 200,
+      "n_test_distractors": 20,
+      "all_zero_test_cases": 0,
+      "by_transformation": [
+        {
+          "transformation_type": "visual_noise_redacted",
+          "protocol_id": "V3",
+          "recall_at_1": 0.16,
+          "recall_at_5": 0.6,
+          "mrr": 0.3454,
+          "n": 50
+        },
+        {
+          "transformation_type": "visual_redacted",
+          "protocol_id": "V1",
+          "recall_at_1": 0.16,
+          "recall_at_5": 0.6,
+          "mrr": 0.3454,
+          "n": 50
+        },
+        {
+          "transformation_type": "visual_redacted_reorder",
+          "protocol_id": "V2",
+          "recall_at_1": 0.16,
+          "recall_at_5": 0.6,
+          "mrr": 0.3454,
+          "n": 50
+        },
+        {
+          "transformation_type": "visual_strong",
+          "protocol_id": "V4",
+          "recall_at_1": 0.14,
+          "recall_at_5": 0.32,
+          "mrr": 0.2685,
+          "n": 50
+        }
+      ]
+    },
+    "pii_only": {
+      "method": "pii_only",
+      "description": "B: solo PII.",
+      "threshold": 0.0,
+      "recall_at_1": 0.0,
+      "recall_at_1_ci": [
+        0.0,
+        0.0
+      ],
+      "recall_at_5": 0.0,
+      "recall_at_5_ci": [
+        0.0,
+        0.0
+      ],
+      "mrr": 0.0,
+      "mrr_ci": [
+        0.0,
+        0.0
+      ],
+      "fpr": 1.0,
+      "detection_rate": 0.0,
+      "auc_detection": 0.0,
+      "avg_latency_ms": 14.71,
+      "p95_latency_ms": 18.78,
+      "n_test_cases": 200,
+      "n_test_distractors": 20,
+      "all_zero_test_cases": 200,
+      "by_transformation": [
+        {
+          "transformation_type": "visual_noise_redacted",
+          "protocol_id": "V3",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 50
+        },
+        {
+          "transformation_type": "visual_redacted",
+          "protocol_id": "V1",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 50
+        },
+        {
+          "transformation_type": "visual_redacted_reorder",
+          "protocol_id": "V2",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 50
+        },
+        {
+          "transformation_type": "visual_strong",
+          "protocol_id": "V4",
+          "recall_at_1": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "n": 50
+        }
+      ]
+    },
+    "text_layout": {
+      "method": "text_layout",
+      "description": "D: texto + layout (sin PII).",
+      "threshold": 0.9628,
+      "recall_at_1": 0.39,
+      "recall_at_1_ci": [
+        0.32,
+        0.4576
+      ],
+      "recall_at_5": 0.675,
+      "recall_at_5_ci": [
+        0.61,
+        0.74
+      ],
+      "mrr": 0.5104,
+      "mrr_ci": [
+        0.4603,
+        0.5718
+      ],
+      "fpr": 0.0,
+      "detection_rate": 0.005,
+      "auc_detection": 0.2671,
+      "avg_latency_ms": 14.58,
+      "p95_latency_ms": 18.3,
+      "n_test_cases": 200,
+      "n_test_distractors": 20,
+      "all_zero_test_cases": 0,
+      "by_transformation": [
+        {
+          "transformation_type": "visual_noise_redacted",
+          "protocol_id": "V3",
+          "recall_at_1": 0.38,
+          "recall_at_5": 0.68,
+          "mrr": 0.5045,
+          "n": 50
+        },
+        {
+          "transformation_type": "visual_redacted",
+          "protocol_id": "V1",
+          "recall_at_1": 0.38,
+          "recall_at_5": 0.68,
+          "mrr": 0.5045,
+          "n": 50
+        },
+        {
+          "transformation_type": "visual_redacted_reorder",
+          "protocol_id": "V2",
+          "recall_at_1": 0.38,
+          "recall_at_5": 0.68,
+          "mrr": 0.5045,
+          "n": 50
+        },
+        {
+          "transformation_type": "visual_strong",
+          "protocol_id": "V4",
+          "recall_at_1": 0.42,
+          "recall_at_5": 0.66,
+          "mrr": 0.5282,
+          "n": 50
+        }
+      ]
+    },
+    "text_pii": {
+      "method": "text_pii",
+      "description": "E: texto + PII (sin layout).",
+      "threshold": 0.3237,
+      "recall_at_1": 0.39,
+      "recall_at_1_ci": [
+        0.3274,
+        0.465
+      ],
+      "recall_at_5": 0.675,
+      "recall_at_5_ci": [
+        0.6124,
+        0.74
+      ],
+      "mrr": 0.505,
+      "mrr_ci": [
+        0.4494,
+        0.5614
+      ],
+      "fpr": 1.0,
+      "detection_rate": 1.0,
+      "auc_detection": 0.0,
+      "avg_latency_ms": 14.63,
+      "p95_latency_ms": 18.73,
+      "n_test_cases": 200,
+      "n_test_distractors": 20,
+      "all_zero_test_cases": 0,
+      "by_transformation": [
+        {
+          "transformation_type": "visual_noise_redacted",
+          "protocol_id": "V3",
+          "recall_at_1": 0.38,
+          "recall_at_5": 0.68,
+          "mrr": 0.498,
+          "n": 50
+        },
+        {
+          "transformation_type": "visual_redacted",
+          "protocol_id": "V1",
+          "recall_at_1": 0.38,
+          "recall_at_5": 0.68,
+          "mrr": 0.498,
+          "n": 50
+        },
+        {
+          "transformation_type": "visual_redacted_reorder",
+          "protocol_id": "V2",
+          "recall_at_1": 0.38,
+          "recall_at_5": 0.68,
+          "mrr": 0.498,
+          "n": 50
+        },
+        {
+          "transformation_type": "visual_strong",
+          "protocol_id": "V4",
+          "recall_at_1": 0.42,
+          "recall_at_5": 0.66,
+          "mrr": 0.526,
+          "n": 50
+        }
+      ]
+    },
+    "layout_pii": {
+      "method": "layout_pii",
+      "description": "F: layout + PII (sin texto).",
+      "threshold": 0.3076,
+      "recall_at_1": 0.12,
+      "recall_at_1_ci": [
+        0.075,
+        0.165
+      ],
+      "recall_at_5": 0.345,
+      "recall_at_5_ci": [
+        0.285,
+        0.405
+      ],
+      "mrr": 0.2476,
+      "mrr_ci": [
+        0.2053,
+        0.2902
+      ],
+      "fpr": 1.0,
+      "detection_rate": 1.0,
+      "auc_detection": 0.0,
+      "avg_latency_ms": 14.63,
+      "p95_latency_ms": 18.72,
+      "n_test_cases": 200,
+      "n_test_distractors": 20,
+      "all_zero_test_cases": 0,
+      "by_transformation": [
+        {
+          "transformation_type": "visual_noise_redacted",
+          "protocol_id": "V3",
+          "recall_at_1": 0.12,
+          "recall_at_5": 0.34,
+          "mrr": 0.2459,
+          "n": 50
+        },
+        {
+          "transformation_type": "visual_redacted",
+          "protocol_id": "V1",
+          "recall_at_1": 0.12,
+          "recall_at_5": 0.34,
+          "mrr": 0.2459,
+          "n": 50
+        },
+        {
+          "transformation_type": "visual_redacted_reorder",
+          "protocol_id": "V2",
+          "recall_at_1": 0.12,
+          "recall_at_5": 0.34,
+          "mrr": 0.2459,
+          "n": 50
+        },
+        {
+          "transformation_type": "visual_strong",
+          "protocol_id": "V4",
+          "recall_at_1": 0.12,
+          "recall_at_5": 0.36,
+          "mrr": 0.2528,
+          "n": 50
+        }
+      ]
+    },
+    "multimodal": {
+      "method": "multimodal",
+      "description": "G: huella multimodal propuesta (texto híbrido).",
+      "threshold": 0.4589,
+      "recall_at_1": 0.39,
+      "recall_at_1_ci": [
+        0.32,
+        0.455
+      ],
+      "recall_at_5": 0.675,
+      "recall_at_5_ci": [
+        0.615,
+        0.74
+      ],
+      "mrr": 0.5099,
+      "mrr_ci": [
+        0.4525,
+        0.5708
+      ],
+      "fpr": 1.0,
+      "detection_rate": 1.0,
+      "auc_detection": 0.0,
+      "avg_latency_ms": 14.63,
+      "p95_latency_ms": 19.03,
+      "n_test_cases": 200,
+      "n_test_distractors": 20,
+      "all_zero_test_cases": 0,
+      "by_transformation": [
+        {
+          "transformation_type": "visual_noise_redacted",
+          "protocol_id": "V3",
+          "recall_at_1": 0.38,
+          "recall_at_5": 0.68,
+          "mrr": 0.5044,
+          "n": 50
+        },
+        {
+          "transformation_type": "visual_redacted",
+          "protocol_id": "V1",
+          "recall_at_1": 0.38,
+          "recall_at_5": 0.68,
+          "mrr": 0.5044,
+          "n": 50
+        },
+        {
+          "transformation_type": "visual_redacted_reorder",
+          "protocol_id": "V2",
+          "recall_at_1": 0.38,
+          "recall_at_5": 0.68,
+          "mrr": 0.5044,
+          "n": 50
+        },
+        {
+          "transformation_type": "visual_strong",
+          "protocol_id": "V4",
+          "recall_at_1": 0.42,
+          "recall_at_5": 0.66,
+          "mrr": 0.5263,
+          "n": 50
+        }
+      ]
+    },
+    "multimodal_lexical": {
+      "method": "multimodal_lexical",
+      "description": "G con texto solo léxico (TF).",
+      "threshold": 0.4472,
+      "recall_at_1": 0.88,
+      "recall_at_1_ci": [
+        0.835,
+        0.925
+      ],
+      "recall_at_5": 1.0,
+      "recall_at_5_ci": [
+        1.0,
+        1.0
+      ],
+      "mrr": 0.94,
+      "mrr_ci": [
+        0.9175,
+        0.9625
+      ],
+      "fpr": 1.0,
+      "detection_rate": 1.0,
+      "auc_detection": 0.0,
+      "avg_latency_ms": 14.73,
+      "p95_latency_ms": 19.12,
+      "n_test_cases": 200,
+      "n_test_distractors": 20,
+      "all_zero_test_cases": 0,
+      "by_transformation": [
+        {
+          "transformation_type": "visual_noise_redacted",
+          "protocol_id": "V3",
+          "recall_at_1": 0.88,
+          "recall_at_5": 1.0,
+          "mrr": 0.94,
+          "n": 50
+        },
+        {
+          "transformation_type": "visual_redacted",
+          "protocol_id": "V1",
+          "recall_at_1": 0.88,
+          "recall_at_5": 1.0,
+          "mrr": 0.94,
+          "n": 50
+        },
+        {
+          "transformation_type": "visual_redacted_reorder",
+          "protocol_id": "V2",
+          "recall_at_1": 0.88,
+          "recall_at_5": 1.0,
+          "mrr": 0.94,
+          "n": 50
+        },
+        {
+          "transformation_type": "visual_strong",
+          "protocol_id": "V4",
+          "recall_at_1": 0.88,
+          "recall_at_5": 1.0,
+          "mrr": 0.94,
+          "n": 50
+        }
+      ]
+    },
+    "multimodal_semantic": {
+      "method": "multimodal_semantic",
+      "description": "G con texto solo SBERT.",
+      "threshold": 0.4876,
+      "recall_at_1": 0.04,
+      "recall_at_1_ci": [
+        0.015,
+        0.07
+      ],
+      "recall_at_5": 0.18,
+      "recall_at_5_ci": [
+        0.13,
+        0.2376
+      ],
+      "mrr": 0.1363,
+      "mrr_ci": [
+        0.1102,
+        0.1618
+      ],
+      "fpr": 1.0,
+      "detection_rate": 0.97,
+      "auc_detection": 0.0,
+      "avg_latency_ms": 14.78,
+      "p95_latency_ms": 19.14,
+      "n_test_cases": 200,
+      "n_test_distractors": 20,
+      "all_zero_test_cases": 0,
+      "by_transformation": [
+        {
+          "transformation_type": "visual_noise_redacted",
+          "protocol_id": "V3",
+          "recall_at_1": 0.04,
+          "recall_at_5": 0.2,
+          "mrr": 0.1423,
+          "n": 50
+        },
+        {
+          "transformation_type": "visual_redacted",
+          "protocol_id": "V1",
+          "recall_at_1": 0.04,
+          "recall_at_5": 0.2,
+          "mrr": 0.1423,
+          "n": 50
+        },
+        {
+          "transformation_type": "visual_redacted_reorder",
+          "protocol_id": "V2",
+          "recall_at_1": 0.04,
+          "recall_at_5": 0.2,
+          "mrr": 0.1423,
+          "n": 50
+        },
+        {
+          "transformation_type": "visual_strong",
+          "protocol_id": "V4",
+          "recall_at_1": 0.04,
+          "recall_at_5": 0.12,
+          "mrr": 0.1184,
+          "n": 50
+        }
+      ]
+    }
+  },
+  "significance_G_vs_E": {
+    "comparison": "multimodal (G) vs text_pii (E)",
+    "n_paired_cases": 200,
+    "mcnemar_b_G_hits_E_miss": 0,
+    "mcnemar_c_E_hits_G_miss": 0,
+    "mcnemar_p_value": null,
+    "wilcoxon_p_value": 2.5e-05,
+    "recall_at_1_diff_G_minus_E": 0.0,
+    "recall_at_1_diff_ci": [
+      0.0,
+      0.0
+    ]
+  }
+}
