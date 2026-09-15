@@ -1,4 +1,4 @@
-from types import SimpleNamespace
+﻿from types import SimpleNamespace
 
 import mimetypes
 import time
@@ -2649,7 +2649,7 @@ def load_references_from_db(
     references = list_reference_documents()
 
     return {
-        "message": "Índice productivo de referencias reconstruido desde SQLite.",
+        "message": "Índice productivo de referencias reconstruido desde la base de datos persistente.",
         "ranking_model": "lexical_text_similarity_v1",
         "evidence_roles": {
             "text": "ranking",

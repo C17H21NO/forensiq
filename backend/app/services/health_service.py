@@ -26,16 +26,43 @@ def check_database(
 
 def check_storage() -> bool:
     try:
-        root = storage.root_dir
-
-        return (
-            root.exists()
-            and root.is_dir()
-            and os.access(
-                root,
-                os.R_OK | os.W_OK,
-            )
+        # Desarrollo local
+        root = getattr(
+            storage,
+            "root_dir",
+            None,
         )
+
+        if root is not None:
+            return (
+                root.exists()
+                and root.is_dir()
+                and os.access(
+                    root,
+                    os.R_OK | os.W_OK,
+                )
+            )
+
+        # Deployment con S3 / Supabase Storage
+        client = getattr(
+            storage,
+            "client",
+            None,
+        )
+        bucket_name = getattr(
+            storage,
+            "bucket_name",
+            None,
+        )
+
+        if client is not None and bucket_name:
+            client.list_objects_v2(
+                Bucket=bucket_name,
+                MaxKeys=1,
+            )
+            return True
+
+        return False
 
     except Exception:
         return False
