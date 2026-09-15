@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./App.css";
 
 const API_BASE_URL = "http://127.0.0.1:8000";
@@ -63,18 +63,22 @@ function App() {
     }
   });
   const [loginForm, setLoginForm] = useState({
-    username: "analyst@forensiq.local",
-    password: "Analyst123!",
+    username: "",
+    password: "",
   });
   const [loginError, setLoginError] = useState("");
-
   const currentUser = auth?.user || null;
   const token = auth?.access_token || "";
-  const isAdmin = currentUser?.role === "ADMIN";
-  const isAnalyst = currentUser?.role === "ANALYST" || currentUser?.role === "ADMIN";
-  const canReview = ["ADMIN", "ANALYST", "DPO"].includes(currentUser?.role);
 
-  const [activeSection, setActiveSection] = useState("forensic");
+  const isAdmin = currentUser?.role === "ADMIN";
+  const isAnalyst =
+    currentUser?.role === "ANALYST" || currentUser?.role === "ADMIN";
+  const isDpo = currentUser?.role === "DPO";
+
+  const canRunTopK = isAnalyst;
+  const canViewHistory = isAdmin || isDpo;
+
+  const [activeSection, setActiveSection] = useState("home");
 
   const [references, setReferences] = useState([]);
   const [referenceTotal, setReferenceTotal] = useState(0);
@@ -119,7 +123,7 @@ function App() {
       localStorage.setItem("forensiq_auth", JSON.stringify(data));
       setAuth(data);
       setMessage(`Sesión iniciada como ${ROLE_LABELS[data.user.role] || data.user.role}.`);
-      setActiveSection(data.user.role === "DPO" ? "history" : "forensic");
+      setActiveSection("home");
     } catch (error) {
       setLoginError(`Error de conexión con el backend: ${error.message}`);
     } finally {
@@ -184,7 +188,29 @@ function App() {
   } catch {
     setMessage("Error al listar historial de análisis.");
   }
-}
+  }
+  function openForensicSection() {
+    setActiveSection("forensic");
+    setMessage("");
+  }
+
+  async function openReferencesSection() {
+    setActiveSection("references");
+    setMessage("");
+    await fetchReferences();
+  }
+
+  async function openHistorySection() {
+    setActiveSection("history");
+    setMessage("");
+    await fetchAnalysisHistory();
+  }
+
+  async function openEvaluationSection() {
+    setActiveSection("evaluation");
+    setMessage("");
+    await fetchReferences();
+  }
 async function generateVariantAndMatch() {
   if (!selectedReferenceId) {
     setMessage("Selecciona un documento legítimo primero.");
@@ -218,108 +244,135 @@ async function generateVariantAndMatch() {
     setLoading(false);
   }
 }
-  async function clearAnalysisHistory() {
-    setLoading(true);
-    setMessage("");
+async function clearAnalysisHistory() {
+  const confirmed = window.confirm(
+    "¿Eliminar todo el historial de análisis?\n\nEsta acción eliminará los registros almacenados y no se puede deshacer."
+  );
 
-    try {
-        const response = await apiFetch(`${API_BASE_URL}/analysis/history`, {
-          method: "DELETE",
-        });
-
-        const data = await response.json();
-
-        setMessage(`Historial limpiado. Registros eliminados: ${data.deleted}`);
-        await fetchAnalysisHistory();
-      } catch {
-        setMessage("Error al limpiar historial.");
-      } finally {
-        setLoading(false);
-      }
-    }
-    useEffect(() => {
-      if (token) {
-        fetchReferences();
-        if (currentUser?.role === "DPO") {
-          fetchAnalysisHistory();
-        }
-      }
-    }, [token]);
-  async function fetchAnalysisHistory() {
-    try {
-      const response = await apiFetch(`${API_BASE_URL}/analysis/history`);
-      const data = await response.json();
-
-      setAnalysisHistory(data.items || []);
-      setHistoryTotal(data.total || 0);
-    } catch {
-      setMessage("Error al listar historial de análisis.");
-    }
+  if (!confirmed) {
+    return;
   }
 
-  async function clearAnalysisHistory() {
-    setLoading(true);
-    setMessage("");
+  setLoading(true);
+  setMessage("");
 
-    try {
-      const response = await apiFetch(`${API_BASE_URL}/analysis/history`, {
-        method: "DELETE",
-      });
+  try {
+    const response = await apiFetch(`${API_BASE_URL}/analysis/history`, {
+      method: "DELETE",
+    });
 
-      const data = await response.json();
+    const data = await response.json();
 
-      setMessage(`Historial limpiado. Registros eliminados: ${data.deleted}`);
-      setAnalysisHistory([]);
-      setHistoryTotal(0);
-      setSelectedHistoryItem(null);
-    } catch {
-      setMessage("Error al limpiar historial.");
-    } finally {
-      setLoading(false);
+    if (!response.ok) {
+      setMessage(
+        data.detail ||
+        data.error ||
+        "No se pudo eliminar el historial."
+      );
+      return;
     }
-  }
-  async function loadReferencesFromDb() {
-    setLoading(true);
-    setMessage("");
 
-    try {
-      const response = await apiFetch(`${API_BASE_URL}/references/load-from-db`, {
+    setAnalysisHistory([]);
+    setHistoryTotal(0);
+    setSelectedHistoryItem(null);
+
+    setMessage(
+      `Historial eliminado. Registros eliminados: ${data.deleted ?? 0}.`
+    );
+  } catch (error) {
+    setMessage(
+      `No se pudo eliminar el historial: ${error.message}`
+    );
+  } finally {
+    setLoading(false);
+  }
+}
+async function loadReferencesFromDb() {
+  setLoading(true);
+  setMessage("");
+
+  try {
+    const response = await apiFetch(
+      `${API_BASE_URL}/references/load-from-db`,
+      {
         method: "POST",
-      });
+      }
+    );
 
-      const data = await response.json();
-      setMessage(`Índice recargado desde SQLite. Total: ${data.total}`);
-      await fetchReferences();
-    } catch {
-      setMessage("Error al recargar índice desde SQLite.");
-    } finally {
-      setLoading(false);
+    const data = await response.json();
+
+    if (!response.ok) {
+      setMessage(
+        data.detail ||
+        data.error ||
+        "No se pudo reconstruir el índice de referencias."
+      );
+      return;
     }
+
+    setMessage(
+      `Índice reconstruido correctamente. Referencias disponibles: ${data.total ?? 0}.`
+    );
+
+    await fetchReferences();
+  } catch (error) {
+    setMessage(
+      `No se pudo reconstruir el índice de referencias: ${error.message}`
+    );
+  } finally {
+    setLoading(false);
+  }
+}
+
+async function clearReferences() {
+  const confirmed = window.confirm(
+    `¿Eliminar todas las referencias?\n\nActualmente hay ${referenceTotal} referencia(s) registradas. Esta acción afectará los próximos análisis y no se puede deshacer desde la aplicación.`
+  );
+
+  if (!confirmed) {
+    return;
   }
 
-  async function clearReferences() {
-    setLoading(true);
-    setMessage("");
+  setLoading(true);
+  setMessage("");
 
-    try {
-      const response = await apiFetch(`${API_BASE_URL}/references`, {
-        method: "DELETE",
-      });
+  try {
+    const response = await apiFetch(`${API_BASE_URL}/references`, {
+      method: "DELETE",
+    });
 
-      const data = await response.json();
-      setMessage(`Referencias eliminadas. SQLite: ${data.deleted_from_db}`);
-      setReferences([]);
-      setReferenceTotal(0);
-      setMatchResult(null);
-    } catch {
-      setMessage("Error al limpiar referencias.");
-    } finally {
-      setLoading(false);
+    const data = await response.json();
+
+    if (!response.ok) {
+      setMessage(
+        data.detail ||
+        data.error ||
+        "No se pudieron eliminar las referencias."
+      );
+      return;
     }
+
+    setReferences([]);
+    setReferenceTotal(0);
+    setReferenceFiles([]);
+    setSelectedReferenceId("");
+    setVariantMatchResult(null);
+    setMatchResult(null);
+
+    setMessage(
+      `Referencias eliminadas. Documentos eliminados: ${data.deleted_from_db ?? 0}.`
+    );
+  } catch (error) {
+    setMessage(
+      `No se pudieron eliminar las referencias: ${error.message}`
+    );
+  } finally {
+    setLoading(false);
   }
+}
   async function uploadReferenceDocuments() {
     if (!referenceFiles.length) {
-      setMessage("Selecciona uno o más documentos legítimos primero.");
+      setMessage("Selecciona uno o más documentos de referencia.");
       return;
     }
 
@@ -354,7 +407,9 @@ async function generateVariantAndMatch() {
       }
 
       setMessage(
-        `Carga finalizada. Documentos legítimos cargados: ${successCount}. Rechazados o con error: ${failCount}.`
+        failCount === 0
+          ? `Carga completada. ${successCount} documento(s) agregado(s) como referencia.`
+          : `Carga completada. Agregados: ${successCount}. No procesados: ${failCount}.`
       );
 
       setReferenceFiles([]);
@@ -479,7 +534,10 @@ async function generateVariantAndMatch() {
 
   return (
     <div className="app">
-      <aside className="sidebar">
+      <aside
+  className="sidebar"
+  aria-label="Navegación principal"
+>
         <div className="brand">
           <div className="brand-icon">FQ</div>
           <div>
@@ -488,42 +546,57 @@ async function generateVariantAndMatch() {
           </div>
         </div>
 
-        <nav className="side-nav">
+        <nav
+  className="side-nav"
+  aria-label="Secciones de ForensiQ"
+>
           <span className="nav-label">Principal</span>
-          {isAnalyst && (
-            <button
-              className={activeSection === "forensic" ? "active" : ""}
-              onClick={() => setActiveSection("forensic")}
-            >
-              <span>◉</span> Análisis forense
-            </button>
-          )}
-          {isAdmin && (
-            <button
-              className={activeSection === "evaluation" ? "active" : ""}
-              onClick={() => setActiveSection("evaluation")}
-            >
-              <span>▣</span> Evaluación experimental
-            </button>
-          )}
+
           <button
-            className={activeSection === "history" ? "active" : ""}
-            onClick={() => {
-              setActiveSection("history");
-              fetchAnalysisHistory();
-            }}
+            className={activeSection === "home" ? "active" : ""}
+            aria-current={activeSection === "home" ? "page" : undefined}
+            onClick={() => setActiveSection("home")}
           >
-            <span>▦</span> Historial
+            Inicio
           </button>
 
-          <span className="nav-label">Datos</span>
-          <button onClick={fetchReferences}>
-            <span>↻</span> Actualizar índice
-          </button>
-          {isAdmin && (
-            <button onClick={loadReferencesFromDb}>
-              <span>▤</span> Recargar SQLite
+          {canRunTopK && (
+            <button
+  className={activeSection === "forensic" ? "active" : ""}
+  aria-current={activeSection === "forensic" ? "page" : undefined}
+  onClick={openForensicSection}
+>
+  Analizar documento
+</button>
+          )}
+          {isAnalyst && (
+            <button
+              className={activeSection === "references" ? "active" : ""}
+              onClick={openReferencesSection}
+            >
+              Referencias
             </button>
+          )}
+          {canViewHistory && (
+            <button
+              className={activeSection === "history" ? "active" : ""}
+              onClick={openHistorySection}
+            >
+              Historial
+            </button>
+          )}
+
+          {isAdmin && (
+            <>
+              <span className="nav-label">Administración</span>
+
+              <button
+                className={activeSection === "evaluation" ? "active" : ""}
+                onClick={openEvaluationSection}
+              >
+                Experimental
+              </button>
+            </>
           )}
         </nav>
 
@@ -541,32 +614,163 @@ async function generateVariantAndMatch() {
         <header className="topbar">
           <div>
             <h2>
-                {activeSection === "forensic"
-                  ? "Visor de Análisis Forense"
-                  : activeSection === "evaluation"
-                  ? "Laboratorio Experimental"
-                  : "Historial de Archivos Analizados"}
+              {activeSection === "home"
+                ? "Inicio"
+                : activeSection === "forensic"
+                  ? "Analizar documento"
+                  : activeSection === "references"
+                    ? "Documentos de referencia"
+                    : activeSection === "evaluation"
+                      ? "Área experimental"
+                      : "Historial de análisis"}
             </h2>
+
             <p>
-              {activeSection === "forensic"
-                ? "Matching documental mediante huella multimodal"
-                : activeSection === "evaluation"
-                ? "Validación con corpus sintético, variantes y baselines"
-                : "Registro persistente de documentos sospechosos procesados"}
+              {activeSection === "home"
+                ? "Revisión asistida de documentos sospechosos"
+                : activeSection === "forensic"
+                  ? "Compara un documento sospechoso con las referencias disponibles"
+                  : activeSection === "references"
+                    ? "Consulta los documentos legítimos utilizados como referencia"
+                    : activeSection === "evaluation"
+                      ? "Funciones reservadas para evaluación técnica y reproducibilidad"
+                      : "Consulta los análisis registrados por el sistema"}
             </p>
           </div>
 
           <div className="system-pills">
-            <span className="pill good">Backend activo</span>
-            <span className="pill good">SQLite conectado</span>
-            <span className="pill alert">SBERT integrado</span>
-            <span className="pill">Índice: {referenceTotal} refs</span>
+            <span className="pill">
+              {ROLE_LABELS[currentUser.role] || currentUser.role}
+            </span>
           </div>
         </header>
 
-        {message && <div className="notice">{message}</div>}
-        {loading && <div className="loading">Procesando operación...</div>}
+        {message && (
+  <div
+    className="notice"
+    role="status"
+    aria-live="polite"
+  >
+    {message}
+  </div>
+)}
 
+{loading && (
+  <div
+    className="loading"
+    role="status"
+    aria-live="polite"
+  >
+    Procesando operación...
+  </div>
+)}
+        {activeSection === "home" && (
+          <main className="history-layout">
+            <section className="panel full-panel home-hero">
+              <div className="home-hero-content">
+                <span className="home-eyebrow">ForensiQ</span>
+
+                <h3>
+                  Revisión asistida de documentos sospechosos
+                </h3>
+
+                <p>
+                  Compara un documento sospechoso con las referencias registradas
+                  y prioriza los candidatos que deberían revisarse primero.
+                </p>
+              </div>
+
+              {canRunTopK && (
+                <>
+                  <div className="workflow-steps">
+                    <div className="workflow-step">
+                      <span className="workflow-number">1</span>
+
+                      <div>
+                        <strong>Selecciona el documento</strong>
+                        <p>
+                          Carga el archivo sospechoso que deseas revisar.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="workflow-step">
+                      <span className="workflow-number">2</span>
+
+                      <div>
+                        <strong>ForensiQ lo compara</strong>
+                        <p>
+                          El sistema calcula su similitud frente a las referencias
+                          disponibles.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="workflow-step">
+                      <span className="workflow-number">3</span>
+
+                      <div>
+                        <strong>Revisa los candidatos</strong>
+                        <p>
+                          Los resultados aparecen ordenados por similitud textual.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="home-ranking-note">
+                    <div>
+                      <strong>¿Qué determina el orden?</strong>
+
+                      <p>
+                        La similitud textual determina la posición de cada candidato.
+                        La estructura visual y el contexto PII se presentan como
+                        evidencia auxiliar.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="home-primary-action">
+                    <button
+                      className="primary"
+                      onClick={openForensicSection}
+                    >
+                      Analizar un documento
+                    </button>
+
+                    <span>
+                      El sistema apoya la revisión del analista y no emite una
+                      decisión automática de correspondencia.
+                    </span>
+                  </div>
+                </>
+              )}
+
+              {isDpo && (
+                <div className="dpo-home">
+                  <div className="workflow-step">
+                    <span className="workflow-number">1</span>
+
+                    <div>
+                      <strong>Consulta los análisis registrados</strong>
+                      <p>
+                        Revisa los casos procesados y la información contextual
+                        disponible de acuerdo con tu perfil.
+                      </p>
+                    </div>
+                  </div>
+
+                  <button
+                    className="primary"
+                    onClick={openHistorySection}
+                  >
+                    Revisar historial
+                  </button>
+                </div>
+              )}
+            </section>
+          </main>
+        )}
         {activeSection === "forensic" && !isAnalyst && (
           <main className="history-layout">
             <section className="panel full-panel">
@@ -577,153 +781,281 @@ async function generateVariantAndMatch() {
         )}
 
         {activeSection === "forensic" && isAnalyst && (
-          <main className="forensic-layout">
-            <section className="panel large-panel">
-              <PanelHeader
-                title="Índice de documentos legítimos"
-                badge={`${referenceTotal} cargados`}
-              />
+  <main className="history-layout">
+    <section className="panel full-panel">
+      <PanelHeader
+        title="Analizar documento sospechoso"
+        badge="Top-5"
+      />
 
-              <p className="muted">
-                Documentos de referencia cargados en memoria y persistidos en SQLite.
+      <p>
+        Selecciona un documento sospechoso. ForensiQ lo comparará con los
+        documentos de referencia disponibles y mostrará los candidatos que
+        deberían revisarse primero.
+      </p>
+
+<div className="analysis-upload">
+  <input
+    id="suspicious-document-input"
+    className="file-input-hidden"
+    type="file"
+    accept=".pdf,.docx,.txt,.png,.jpg,.jpeg"
+    onChange={(event) => {
+      const file = event.target.files?.[0] || null;
+      setSuspiciousFile(file);
+      setMatchResult(null);
+      setMessage("");
+    }}
+  />
+
+  {!suspiciousFile ? (
+    <label
+  htmlFor="suspicious-document-input"
+  className="upload-dropzone"
+  role="button"
+  tabIndex={0}
+  onKeyDown={(event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+
+      document
+        .getElementById("suspicious-document-input")
+        ?.click();
+    }
+  }}
+>
+      <span className="upload-symbol">+</span>
+
+      <strong>Selecciona un documento sospechoso</strong>
+
+      <span>
+        PDF, DOCX, TXT, JPG, PNG o JPEG
+      </span>
+
+      <span className="upload-action">
+        Seleccionar archivo
+      </span>
+    </label>
+  ) : (
+    <div className="selected-file-card">
+      <div className="selected-file-icon">
+        DOC
+      </div>
+
+      <div className="selected-file-info">
+        <strong>{suspiciousFile.name}</strong>
+
+        <span>
+          {suspiciousFile.name.split(".").pop()?.toUpperCase() || "Archivo"}
+          {" · "}
+          {formatFileSize(suspiciousFile.size)}
+        </span>
+      </div>
+
+      <label
+  htmlFor="suspicious-document-input"
+  className="change-file-button"
+  role="button"
+  tabIndex={0}
+  onKeyDown={(event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+
+      document
+        .getElementById("suspicious-document-input")
+        ?.click();
+    }
+  }}
+>
+  Cambiar
+</label>
+    </div>
+  )}
+</div>
+
+      <button
+        className="primary full"
+        onClick={matchSuspiciousDocument}
+        disabled={!suspiciousFile || loading}
+      >
+        {loading ? "Analizando..." : "Analizar documento"}
+      </button>
+
+      <p className="muted small-note">
+        ForensiQ genera un ranking para apoyar la revisión. El sistema no
+        determina automáticamente que dos documentos sean idénticos.
+      </p>
+    </section>
+
+    {matchResult && (
+      <>
+        <section className="panel full-panel">
+          <PanelHeader
+            title="Resumen del análisis"
+            badge="Completado"
+          />
+
+          <EvidencePanel result={matchResult} />
+        </section>
+
+        <section className="panel full-panel">
+          <PanelHeader
+            title="Candidatos para revisión"
+            badge={`${matchResult.matches?.length ?? 0} encontrados`}
+          />
+
+          <MatchResults result={matchResult} />
+        </section>
+      </>
+    )}
+  </main>
+)}
+{activeSection === "references" && isAnalyst && (
+  <main className="history-layout">
+    <section className="panel full-panel">
+      <div className="reference-heading">
+        <div>
+          <span className="home-eyebrow">
+            Corpus de comparación
+          </span>
+
+          <h3>Documentos de referencia</h3>
+
+          <p>
+            ForensiQ compara los documentos sospechosos contra estas
+            referencias para generar el ranking de candidatos.
+          </p>
+        </div>
+
+        <div className="reference-count">
+          <strong>{referenceTotal}</strong>
+          <span>referencias</span>
+        </div>
+      </div>
+
+      {!isAdmin && (
+        <div className="reference-readonly-note">
+          <strong>Modo consulta</strong>
+
+          <p>
+            Tu perfil puede consultar las referencias disponibles.
+            La incorporación, reconstrucción o eliminación está reservada
+            al administrador.
+          </p>
+        </div>
+      )}
+
+      {isAdmin && (
+        <div className="reference-admin-zone">
+          <div className="reference-admin-heading">
+            <div>
+              <strong>Administración de referencias</strong>
+
+              <p>
+                Agrega documentos legítimos o realiza operaciones de
+                mantenimiento sobre el corpus de comparación.
               </p>
-              <div className="upload-box reference-upload">
-                <input
-                  type="file"
-                  multiple
-                  accept=".pdf,.docx,.txt,.png,.jpg,.jpeg"
-                  onChange={(event) => setReferenceFiles(Array.from(event.target.files || []))}
-                />
+            </div>
 
-                <span>
-                  {referenceFiles.length
-                    ? `${referenceFiles.length} documento(s) seleccionado(s)`
-                    : "Selecciona uno o más documentos legítimos para agregarlos al índice"}
-                </span>
-                <p className="input-warning">
-                  Solo carga documentos legítimos de referencia. No cargues archivos VARIANT_ ni documentos sospechosos en este índice.
-                </p>
-                {referenceFiles.length > 0 && (
-                  <div className="selected-files">
-                    {referenceFiles.slice(0, 5).map((file) => (
-                      <span key={file.name}>{file.name}</span>
-                    ))}
+            <span>ADMIN</span>
+          </div>
 
-                    {referenceFiles.length > 5 && (
-                      <span>+ {referenceFiles.length - 5} archivo(s) más</span>
-                    )}
-                  </div>
-                )}
+          <div className="upload-box reference-upload">
+            <input
+              type="file"
+              multiple
+              accept=".pdf,.docx,.txt,.png,.jpg,.jpeg"
+              disabled={loading}
+              onChange={(event) =>
+                setReferenceFiles(
+                  Array.from(event.target.files || [])
+                )
+              }
+            />
 
-                {isAdmin ? (
-                  <button className="primary full" onClick={uploadReferenceDocuments}>
-                    Cargar documento(s) legítimo(s)
-                  </button>
-                ) : (
-                  <p className="muted small-note">Solo ADMIN puede cargar documentos legítimos de referencia.</p>
+            <span>
+              {referenceFiles.length
+                ? `${referenceFiles.length} documento(s) seleccionado(s)`
+                : "Selecciona documentos legítimos para agregarlos como referencia"}
+            </span>
+
+            {referenceFiles.length > 0 && (
+              <div className="selected-files">
+                {referenceFiles.slice(0, 5).map((file) => (
+                  <span key={file.name}>
+                    {file.name}
+                  </span>
+                ))}
+
+                {referenceFiles.length > 5 && (
+                  <span>
+                    + {referenceFiles.length - 5} archivo(s) más
+                  </span>
                 )}
               </div>
-              <div className="toolbar">
-                <button onClick={fetchReferences}>Actualizar</button>
-                {isAdmin && <button onClick={loadReferencesFromDb}>Recargar desde SQLite</button>}
-                {isAdmin && (
-                  <button className="danger" onClick={clearReferences}>
-                    Limpiar índice
-                  </button>
-                )}
-              </div>
-
-              <ReferenceTable references={references} />
-            </section>
-
-            <section className="panel">
-              <PanelHeader title="Nuevo documento sospechoso" badge="Top-5" />
-
-            <p className="muted">
-              Carga una evidencia sospechosa para compararla contra el índice de documentos legítimos mediante huella multimodal.
-            </p>
-
-              <div className="upload-box">
-                <input
-                  type="file"
-                  accept=".pdf,.docx,.txt,.png,.jpg,.jpeg"
-                  onChange={(event) => setSuspiciousFile(event.target.files[0])}
-                />
-                <span>{suspiciousFile ? suspiciousFile.name : "Sin archivo seleccionado"}</span>
-              </div>
-
-              <button className="primary full" onClick={matchSuspiciousDocument}>
-                Ejecutar matching forense
-              </button>
-              {matchResult && <EvidencePanel result={matchResult} />}
-            </section>
-            <section className="panel">
-              <PanelHeader title="Simulación controlada" badge="Ground truth" />
-
-              <p className="muted">
-                Genera una variante alterada desde un documento legítimo conocido y verifica si el sistema recupera el documento original en el ranking.
-              </p>
-
-              <label className="field">
-                Documento legítimo base
-                <select
-                  value={selectedReferenceId}
-                  onChange={(event) => setSelectedReferenceId(event.target.value)}
-                >
-                  <option value="">Selecciona un documento</option>
-                  {references.map((doc) => (
-                    <option key={doc.document_id} value={doc.document_id}>
-                      {doc.filename}
-                    </option>
-                  ))}
-                </select>
-              </label>
-
-              <label className="field">
-                Transformación
-                <select
-                  value={selectedTransformation}
-                  onChange={(event) => setSelectedTransformation(event.target.value)}
-                >
-                  {TRANSFORMATION_GROUPS.map((group) => (
-                    <optgroup key={group.label} label={group.label}>
-                      {group.options.map(([value, label]) => (
-                        <option key={value} value={value}>
-                          {label}
-                        </option>
-                      ))}
-                    </optgroup>
-                  ))}
-                </select>
-              </label>
-
-              <button className="primary full" onClick={generateVariantAndMatch}>
-                Generar variante y comparar
-              </button>
-
-              {variantMatchResult && (
-                <ControlledTestResult result={variantMatchResult} />
-              )}
-            </section>
-            <section className="panel wide-panel">
-              <PanelHeader title="Pipeline activo del prototipo" badge="MVP local" />
-
-              <p className="muted">
-                Flujo implementado para procesar documentos sensibles en entorno local,
-                construir huellas multimodales y generar un ranking forense explicable.
-              </p>
-
-              <PipelineStatus />
-            </section>
-            {matchResult && (
-              <section className="panel wide-panel">
-                <PanelHeader title="Ranking de coincidencias" badge="Resultados" />
-                <MatchResults result={matchResult} />
-              </section>
             )}
-          </main>
-        )}
 
+            <button
+              className="primary full"
+              onClick={uploadReferenceDocuments}
+              disabled={!referenceFiles.length || loading}
+            >
+              {loading
+                ? "Procesando..."
+                : "Agregar documentos de referencia"}
+            </button>
+          </div>
+
+          <div className="reference-maintenance">
+            <div>
+              <strong>Mantenimiento</strong>
+
+              <p>
+                Utiliza estas acciones únicamente cuando sea necesario
+                actualizar el corpus de referencia.
+              </p>
+            </div>
+
+            <div className="toolbar">
+              <button
+                onClick={loadReferencesFromDb}
+                disabled={loading}
+              >
+                Reconstruir índice
+              </button>
+
+              <button
+                className="danger"
+                onClick={clearReferences}
+                disabled={loading || referenceTotal === 0}
+              >
+                Eliminar todas las referencias
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="reference-list-heading">
+        <div>
+          <strong>Referencias disponibles</strong>
+          <p>
+            Documentos actualmente considerados durante la comparación.
+          </p>
+        </div>
+
+        <button
+          onClick={fetchReferences}
+          disabled={loading}
+        >
+          Actualizar
+        </button>
+      </div>
+
+      <ReferenceTable references={references} />
+    </section>
+  </main>
+)}
         {activeSection === "evaluation" && !isAdmin && (
           <main className="history-layout">
             <section className="panel full-panel">
@@ -735,6 +1067,94 @@ async function generateVariantAndMatch() {
 
         {activeSection === "evaluation" && isAdmin && (
           <main className="evaluation-layout">
+            <section className="panel">
+  <PanelHeader
+    title="Simulación controlada"
+    badge="Experimental"
+  />
+
+  <p className="muted">
+    Genera una variante alterada de una referencia conocida y verifica
+    su recuperación en el ranking. Esta función se utiliza únicamente
+    para validación técnica.
+  </p>
+
+  <label className="field">
+    Documento base
+
+    <select
+      value={selectedReferenceId}
+      onChange={(event) =>
+        setSelectedReferenceId(event.target.value)
+      }
+    >
+      <option value="">
+        Selecciona un documento
+      </option>
+
+      {references.map((doc) => (
+        <option
+          key={doc.document_id}
+          value={doc.document_id}
+        >
+          {doc.filename}
+        </option>
+      ))}
+    </select>
+  </label>
+
+  <label className="field">
+    Transformación
+
+    <select
+      value={selectedTransformation}
+      onChange={(event) =>
+        setSelectedTransformation(event.target.value)
+      }
+    >
+      {TRANSFORMATION_GROUPS.map((group) => (
+        <optgroup
+          key={group.label}
+          label={group.label}
+        >
+          {group.options.map(([value, label]) => (
+            <option
+              key={value}
+              value={value}
+            >
+              {label}
+            </option>
+          ))}
+        </optgroup>
+      ))}
+    </select>
+  </label>
+
+  <button
+    className="primary full"
+    onClick={generateVariantAndMatch}
+  >
+    Generar variante y comparar
+  </button>
+
+  {variantMatchResult && (
+    <ControlledTestResult result={variantMatchResult} />
+  )}
+            </section>
+            <section className="panel">
+  <PanelHeader
+    title="Configuración experimental"
+    badge="Técnico"
+  />
+
+  <p className="muted">
+    Información técnica disponible para reproducibilidad y evaluación
+    del prototipo. No forma parte de la interpretación productiva
+    del ranking.
+  </p>
+
+  <PipelineStatus />
+</section>
             <section className="panel">
               <PanelHeader title="Corpus sintético" badge="Generador" />
 
@@ -782,21 +1202,26 @@ async function generateVariantAndMatch() {
         {activeSection === "history" && (
           <main className="history-layout">
             <section className="panel full-panel">
-              <PanelHeader
-                title="Historial de archivos analizados"
-                badge={`${historyTotal} registros`}
-              />
+            <PanelHeader
+              title="Historial de análisis"
+              badge={`${historyTotal} casos`}
+            />
 
-              <p className="muted">
-                Registro persistente de documentos sospechosos procesados mediante matching forense.
-              </p>
+            <p className="muted">
+              Consulta los documentos procesados y revisa los candidatos registrados
+              en cada análisis.
+            </p>
 
               <div className="toolbar">
-                <button onClick={fetchAnalysisHistory}>Actualizar historial</button>
+                <button onClick={fetchAnalysisHistory}>Actualizar</button>
                 {isAdmin && (
-                  <button className="danger" onClick={clearAnalysisHistory}>
-                    Limpiar historial
-                  </button>
+                  <button
+  className="danger"
+  onClick={clearAnalysisHistory}
+  disabled={loading || historyTotal === 0}
+>
+  Eliminar historial
+</button>
                 )}
               </div>
 
@@ -823,68 +1248,81 @@ async function generateVariantAndMatch() {
   );
 }
 
-function LoginScreen({ loginForm, setLoginForm, onSubmit, loading, loginError }) {
-  const demoUsers = [
-    ["analyst@forensiq.local", "Analyst123!", "Analista"],
-    ["admin@forensiq.local", "Admin123!", "Administrador"],
-    ["dpo@forensiq.local", "Dpo123!", "DPO"],
-  ];
-
+function LoginScreen({
+  loginForm,
+  setLoginForm,
+  onSubmit,
+  loading,
+  loginError,
+}) {
   return (
     <div className="login-shell">
       <section className="login-card">
         <div className="brand login-brand">
           <div className="brand-icon">FQ</div>
+
           <div>
             <h1>ForensiQ</h1>
-            <span>Acceso controlado por roles</span>
+            <span>Revisión forense asistida de documentos</span>
           </div>
         </div>
 
         <p className="muted">
-          Inicia sesión para acceder al flujo forense del MVP. Los roles separan administración, análisis forense y revisión de PII.
+          Inicia sesión con las credenciales asignadas para acceder a las
+          funciones correspondientes a tu perfil.
         </p>
 
         <form onSubmit={onSubmit} className="login-form">
           <label className="field">
-            Usuario
+            Correo electrónico
+
             <input
               type="email"
               value={loginForm.username}
-              onChange={(event) => setLoginForm({ ...loginForm, username: event.target.value })}
-              placeholder="analyst@forensiq.local"
+              onChange={(event) =>
+                setLoginForm({
+                  ...loginForm,
+                  username: event.target.value,
+                })
+              }
+              placeholder="correo@organizacion.com"
+              autoComplete="username"
+              required
             />
           </label>
 
           <label className="field">
             Contraseña
+
             <input
               type="password"
               value={loginForm.password}
-              onChange={(event) => setLoginForm({ ...loginForm, password: event.target.value })}
-              placeholder="Contraseña"
+              onChange={(event) =>
+                setLoginForm({
+                  ...loginForm,
+                  password: event.target.value,
+                })
+              }
+              placeholder="Ingresa tu contraseña"
+              autoComplete="current-password"
+              required
             />
           </label>
 
-          {loginError && <div className="message error">{loginError}</div>}
+          {loginError && (
+            <div className="message error">
+              {loginError}
+            </div>
+          )}
 
-          <button className="primary full" type="submit" disabled={loading}>
+          <button
+            className="primary full"
+            type="submit"
+            disabled={loading}
+          >
             {loading ? "Ingresando..." : "Iniciar sesión"}
           </button>
         </form>
-
-        <div className="demo-users">
-          <strong>Usuarios locales TP1</strong>
-          {demoUsers.map(([username, password, role]) => (
-            <button
-              key={username}
-              type="button"
-              onClick={() => setLoginForm({ username, password })}
-            >
-              {role}: {username}
-            </button>
-          ))}
-        </div>
       </section>
     </div>
   );
@@ -948,39 +1386,56 @@ function PipelineStatus() {
 }
 function ReferenceTable({ references }) {
   if (!references.length) {
-    return <div className="empty-state">No hay documentos cargados en el índice.</div>;
+    return (
+      <div className="reference-empty">
+        <strong>No hay documentos de referencia disponibles</strong>
+
+        <p>
+          El sistema necesita referencias registradas para comparar
+          documentos sospechosos.
+        </p>
+      </div>
+    );
   }
 
   return (
-    <div className="table-wrap compact">
-      <table>
-        <thead>
-          <tr>
-            <th>Documento</th>
-            <th>Texto</th>
-            <th>PII</th>
-            <th>Huella</th>
-          </tr>
-        </thead>
-        <tbody>
-          {references.map((doc) => (
-            <tr key={doc.document_id}>
-              <td className="doc-name" title={doc.filename}>
-                {doc.filename}
-              </td>
-              <td>{doc.text_length}</td>
-              <td>
-                <span className="tag red">{doc.pii_count}</span>
-              </td>
-              <td>
-                {doc.fingerprint_summary?.semantic_embedding_dimensions
-                  ? "Multimodal + SBERT"
-                  : "Multimodal"}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="reference-list">
+      {references.map((doc) => (
+        <article
+          className="reference-card"
+          key={doc.document_id}
+        >
+          <div className="reference-icon">
+            REF
+          </div>
+
+          <div className="reference-content">
+            <span>Documento de referencia</span>
+
+            <strong title={doc.filename}>
+              {doc.filename}
+            </strong>
+
+            <div className="reference-meta">
+              <span>
+                Texto extraído:{" "}
+                <strong>
+                  {Number(doc.text_length || 0).toLocaleString()} caracteres
+                </strong>
+              </span>
+
+              <span>
+                Datos personales detectados:{" "}
+                <strong>{doc.pii_count ?? 0}</strong>
+              </span>
+            </div>
+          </div>
+
+          <span className="reference-status">
+            Disponible
+          </span>
+        </article>
+      ))}
     </div>
   );
 }
@@ -1046,91 +1501,143 @@ function MatchExplanation({ explanation }) {
 }
 
 function EvidencePanel({ result }) {
-  const best = result.matches?.[0];
+  const matches = result.matches || [];
+  const best = matches[0];
+
+  const rankingScore =
+    best?.scores?.ranking_score ??
+    best?.scores?.text_score;
 
   return (
-    <div className="evidence-panel">
-      <h4>Resumen del análisis</h4>
+    <div className="analysis-summary">
+      <div className="analysis-success">
+        <div className="analysis-success-icon">✓</div>
 
-      <div className="evidence-row">
-        <span>Archivo</span>
-        <strong>{result.filename}</strong>
-      </div>
-
-      <div className="evidence-row">
-        <span>PII detectada</span>
-        <strong>{result.pii_count}</strong>
-      </div>
-      <div className="evidence-row">
-        <span>Entidades NLP</span>
-        <strong>{result.nlp_entity_count ?? 0}</strong>
+        <div>
+          <strong>Análisis completado</strong>
+          <span>
+            ForensiQ encontró {matches.length} candidato
+            {matches.length === 1 ? "" : "s"} para revisión.
+          </span>
+        </div>
       </div>
 
-      <div className="evidence-row">
-        <span>Modo de extracción</span>
-        <strong>{formatExtractionMode(result.extraction_mode)}</strong>
-      </div>
+      <div className="analysis-summary-grid">
+        <div className="analysis-summary-item">
+          <span>Documento analizado</span>
+          <strong title={result.filename}>
+            {result.filename}
+          </strong>
+        </div>
 
-      <div className="evidence-row">
-        <span>OCR usado</span>
-        <strong className={result.ocr_used ? "hit-text" : ""}>
-          {result.ocr_used ? "Sí" : "No"}
-        </strong>
-      </div>
-      <div className="evidence-row">
-        <span>Bloques layout</span>
-        <strong>{result.layout_block_count ?? "—"}</strong>
-      </div>
+        <div className="analysis-summary-item">
+          <span>Candidatos encontrados</span>
+          <strong>{matches.length}</strong>
+        </div>
 
-      <VisualSummaryCard summary={result.visual_summary} />
+        <div className="analysis-summary-item primary-result">
+          <span>Primer candidato</span>
+          <strong>
+            {best?.filename || "Sin candidato"}
+          </strong>
+        </div>
 
-      <div className="evidence-row">
-        <span>Longitud texto</span>
-        <strong>{result.text_length ?? 0} caracteres</strong>
+        <div className="analysis-summary-item primary-result">
+          <span>Similitud textual</span>
+          <strong>
+            {best ? formatScore(rankingScore) : "—"}
+          </strong>
+        </div>
       </div>
-      <div className="evidence-row">
-        <span>Mejor candidato</span>
-        <strong>{best?.filename || "—"}</strong>
-      </div>
-
-      <div className="score-card">
-        <span>Score final</span>
-        <strong>{formatScore(best?.scores?.final_score)}</strong>
-      </div>
-      <button
-        className="primary full"
-        onClick={() =>
-          downloadJson(
-            result,
-            `forensiq_analysis_${safeFilename(result.filename)}.json`
-          )
-        }
-      >
-        Exportar análisis JSON
-      </button>
 
       {best && (
-        <div className="score-bars">
-          <ScoreBar label="Texto" value={best.scores?.text_score} />
-          <ScoreBar label="SBERT" value={best.scores?.semantic_text_score} />
-          <ScoreBar label="Layout" value={best.scores?.layout_score} />
-          <ScoreBar label="PII" value={best.scores?.pii_score} />
+        <div className="ranking-explanation">
+          <strong>
+            ¿Cómo interpretar este resultado?
+          </strong>
+
+          <p>
+            El primer candidato ocupa la posición #1 porque presenta la
+            mayor similitud textual dentro de los documentos evaluados.
+          </p>
+
+          <div className="ranking-signals">
+            <div className="ranking-signal-main">
+              <span>Determina el ranking</span>
+              <strong>
+                Similitud textual · {formatScore(rankingScore)}
+              </strong>
+            </div>
+
+            <div>
+              <span>Evidencia auxiliar</span>
+              <strong>
+                Layout · {formatScore(best.scores?.layout_score)}
+              </strong>
+            </div>
+
+            <div>
+              <span>Evidencia auxiliar</span>
+              <strong>
+                Contexto PII · {formatScore(best.scores?.pii_context_score)}
+              </strong>
+            </div>
+          </div>
         </div>
       )}
-      {result.nlp_entities?.length > 0 && (
-        <EntityPreview
-          title="Entidades NLP detectadas"
-          entities={result.nlp_entities}
-        />
-      )}
-      <div className="evidence-row">
-        <span>Bloques layout</span>
-        <strong>{result.layout_block_count ?? "—"}</strong>
-      </div>
 
-      <div className="evidence-row">
-        <span>Longitud texto</span>
-        <strong>{result.text_length ?? 0} caracteres</strong>
+      <details className="technical-details">
+        <summary>
+          Ver detalles técnicos del análisis
+        </summary>
+
+        <div className="technical-grid">
+          <div>
+            <span>PII detectada</span>
+            <strong>{result.pii_count ?? 0}</strong>
+          </div>
+
+          <div>
+            <span>Modo de extracción</span>
+            <strong>
+              {formatExtractionMode(result.extraction_mode)}
+            </strong>
+          </div>
+
+          <div>
+            <span>OCR utilizado</span>
+            <strong>
+              {result.ocr_used ? "Sí" : "No"}
+            </strong>
+          </div>
+
+          <div>
+            <span>Longitud de texto</span>
+            <strong>
+              {result.text_length ?? 0} caracteres
+            </strong>
+          </div>
+        </div>
+
+        {result.nlp_entities?.length > 0 && (
+          <EntityPreview
+            title="Información contextual detectada"
+            entities={result.nlp_entities}
+          />
+        )}
+      </details>
+
+      <div className="analysis-export">
+        <button
+          onClick={() =>
+            downloadJson(
+              result,
+              `forensiq_analysis_${safeFilename(result.filename)}.json`
+            )
+          }
+        >
+          Exportar detalle técnico
+        </button>
       </div>
     </div>
   );
@@ -1164,58 +1671,147 @@ function EntityPreview({ title, entities }) {
     </div>
   );
 }
-function TextPreview({ text }) {
-  return (
-    <div className="text-preview">
-      <h4>Texto extraído</h4>
-      <pre>{text}</pre>
-    </div>
-  );
-}
 function MatchResults({ result }) {
+  const matches = result.matches || [];
+
+  if (matches.length === 0) {
+    return (
+      <div className="results-empty">
+        <strong>No se encontraron candidatos.</strong>
+        <p>
+          El análisis terminó correctamente, pero no se obtuvieron
+          documentos candidatos para revisión.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="results-block">
-      <div className="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Pos.</th>
-              <th>Documento candidato</th>
-              <th>Score final</th>
-              <th>Texto</th>
-              <th>SBERT</th>
-              <th>Layout</th>
-              <th>PII</th>
-              <th>Se?al</th>
-              <th>Explicaci?n</th>
-            </tr>
-          </thead>
-          <tbody>
-            {(result.matches || []).map((match, index) => (
-              <tr key={match.document_id}>
-                <td>{index + 1}</td>
-                <td className="doc-name" title={match.filename}>
-                  {match.filename}
-                </td>
-                <td>
-                  <span className="score-highlight">
-                    {formatScore(match.scores?.final_score)}
+      <div className="results-intro">
+        <strong>
+          {matches.length} candidato{matches.length === 1 ? "" : "s"} para revisión
+        </strong>
+
+        <p className="muted">
+          El orden se determina por similitud textual. La evidencia de
+          estructura visual y contexto PII sirve únicamente como apoyo
+          para la revisión.
+        </p>
+      </div>
+
+      <div className="candidate-list">
+        {matches.map((match, index) => {
+          const rankingScore =
+            match.scores?.ranking_score ??
+            match.scores?.text_score ??
+            0;
+
+          const numericScore = Number(rankingScore) || 0;
+
+          const scoreWidth = Math.max(
+            0,
+            Math.min(100, numericScore * 100)
+          );
+
+          return (
+            <article
+              className={`candidate-card ${
+                index === 0 ? "candidate-card-best" : ""
+              }`}
+              key={match.document_id}
+            >
+              <div className="candidate-header">
+                <div className="candidate-position">
+                  #{index + 1}
+                </div>
+
+                <div className="candidate-document">
+                  <span>
+                    {index === 0
+                      ? "Primer candidato"
+                      : "Candidato para revisión"}
                   </span>
-                </td>
-                <td>{formatScore(match.scores?.text_score)}</td>
-                <td>{formatScore(match.scores?.semantic_text_score)}</td>
-                <td>{formatScore(match.scores?.layout_score)}</td>
-                <td>{formatScore(match.scores?.pii_score)}</td>
-                <td>
-                  <SignalBadge explanation={match.analyst_explanation} />
-                </td>
-                <td>
-                  <MatchExplanation explanation={match.analyst_explanation} />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+
+                  <strong title={match.filename}>
+                    {match.filename}
+                  </strong>
+                </div>
+
+                {index === 0 && (
+                  <span className="candidate-best-badge">
+                    Mayor similitud
+                  </span>
+                )}
+              </div>
+
+              <div className="candidate-main-score">
+                <div>
+                  <span>Similitud textual</span>
+                  <strong>{formatScore(rankingScore)}</strong>
+                </div>
+
+                <div
+  className="score-meter"
+  role="progressbar"
+  aria-label="Similitud textual"
+  aria-valuemin={0}
+  aria-valuemax={100}
+  aria-valuenow={Math.round(scoreWidth)}
+>
+                  <div
+                    className="score-meter-fill"
+                    style={{ width: `${scoreWidth}%` }}
+                  />
+                </div>
+              </div>
+
+              <div className="candidate-auxiliary">
+                <div>
+                  <span>Estructura visual</span>
+                  <strong>
+                    {formatScore(match.scores?.layout_score)}
+                  </strong>
+                  <small>Auxiliar</small>
+                </div>
+
+                <div>
+                  <span>Contexto PII</span>
+                  <strong>
+                    {formatScore(match.scores?.pii_context_score)}
+                  </strong>
+                  <small>Auxiliar</small>
+                </div>
+              </div>
+
+              <details className="candidate-details">
+                <summary>
+                  ¿Por qué aparece en esta posición?
+                </summary>
+
+                <div className="candidate-explanation">
+                  <p>
+                    <strong>Orden del ranking:</strong>{" "}
+                    este candidato ocupa la posición #{index + 1} de
+                    acuerdo con su similitud textual.
+                  </p>
+
+                  {match.analyst_explanation?.explanation && (
+                    <p>
+                      {match.analyst_explanation.explanation}
+                    </p>
+                  )}
+
+                  <p className="muted">
+                    La estructura visual y el contexto PII ayudan al
+                    analista a interpretar el candidato, pero no modifican
+                    su posición.
+                  </p>
+                </div>
+              </details>
+            </article>
+          );
+        })}
       </div>
     </div>
   );
@@ -1425,53 +2021,93 @@ function EvaluationTable({ result }) {
 }
 function HistoryTable({ items, onSelectItem }) {
   if (!items.length) {
-    return <div className="empty-state">No hay análisis registrados.</div>;
+    return (
+      <div className="history-empty">
+        <strong>No hay análisis registrados</strong>
+        <p>
+          Cuando se procesen documentos sospechosos, los casos aparecerán
+          aquí para su revisión.
+        </p>
+      </div>
+    );
   }
 
   return (
-    <div className="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Archivo sospechoso</th>
-            <th>Tipo</th>
-            <th>Fecha</th>
-            <th>PII</th>
-            <th>Latencia</th>
-            <th>Mejor candidato</th>
-            <th>Score</th>
-            <th>Detalle</th>
-          </tr>
-        </thead>
-        <tbody>
-          {items.map((item) => (
-            <tr key={item.id}>
-              <td className="doc-name" title={item.filename}>
-                {item.filename}
-              </td>
-              <td>{item.file_type}</td>
-              <td>{formatDate(item.created_at)}</td>
-              <td>
-                <span className="tag red">{item.pii_count}</span>
-              </td>
-              <td>{item.latency_ms ? `${item.latency_ms} ms` : "—"}</td>
-              <td className="doc-name" title={item.best_match_filename || ""}>
-                {item.best_match_filename || "—"}
-              </td>
-              <td>
-                <span className="score-highlight">
-                  {formatScore(item.best_match_score)}
+    <div className="history-card-list">
+      {items.map((item) => {
+        const rankingScore =
+          item.best_match_ranking_score ??
+          item.best_match_score;
+
+        return (
+          <article
+            className="history-card"
+            key={item.id}
+          >
+            <div className="history-card-header">
+              <div className="history-case-number">
+                #{item.id}
+              </div>
+
+              <div className="history-card-title">
+                <span>
+                  {formatDate(item.created_at)}
                 </span>
-              </td>
-              <td>
-                <button className="small-button" onClick={() => onSelectItem(item)}>
-                  Ver
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+
+                <strong title={item.filename}>
+                  {item.filename}
+                </strong>
+              </div>
+
+              <span className="history-file-type">
+                {item.file_type || "Archivo"}
+              </span>
+            </div>
+
+            <div className="history-card-result">
+              <div>
+                <span>Primer candidato</span>
+
+                <strong title={item.best_match_filename || ""}>
+                  {item.best_match_filename || "Sin candidato"}
+                </strong>
+              </div>
+
+              <div className="history-score">
+                <span>Similitud textual</span>
+
+                <strong>
+                  {formatScore(rankingScore)}
+                </strong>
+              </div>
+            </div>
+
+            <div className="history-card-meta">
+              <span>
+                PII detectada: <strong>{item.pii_count ?? 0}</strong>
+              </span>
+
+              <span>
+                Latencia:{" "}
+                <strong>
+                  {item.latency_ms
+                    ? `${item.latency_ms} ms`
+                    : "No disponible"}
+                </strong>
+              </span>
+            </div>
+
+            <div className="history-card-action">
+              <button
+                className="primary"
+                onClick={() => onSelectItem(item)}
+              >
+                Revisar caso
+              </button>
+            </div>
+          </article>
+        );
+      })}
     </div>
   );
 }
@@ -1479,66 +2115,248 @@ function HistoryTable({ items, onSelectItem }) {
 function HistoryDetail({ item }) {
   const matches = item.matches || [];
 
+  const bestRankingScore =
+    item.best_match_ranking_score ??
+    item.best_match_score;
+
   return (
-    <div className="history-detail">
-      <div className="stats-grid">
+    <div className="history-detail-v2">
+      <div className="history-detail-heading">
         <div>
-          <span>Archivo sospechoso</span>
-          <strong title={item.filename}>{shortText(item.filename, 34)}</strong>
+          <span className="home-eyebrow">
+            Caso #{item.id}
+          </span>
+
+          <h4>
+            Revisión del análisis
+          </h4>
+
+          <p>
+            Consulta el documento procesado, el candidato principal y el
+            ranking registrado durante el análisis.
+          </p>
         </div>
+
+        <span className="history-detail-date">
+          {formatDate(item.created_at)}
+        </span>
+      </div>
+
+      <div className="history-overview-grid">
         <div>
-          <span>Mejor candidato</span>
-          <strong title={item.best_match_filename || ""}>
-            {shortText(item.best_match_filename || "—", 34)}
+          <span>Documento analizado</span>
+
+          <strong title={item.filename}>
+            {item.filename}
           </strong>
         </div>
+
         <div>
-          <span>Score final</span>
-          <strong>{formatScore(item.best_match_score)}</strong>
+          <span>Primer candidato</span>
+
+          <strong title={item.best_match_filename || ""}>
+            {item.best_match_filename || "Sin candidato"}
+          </strong>
+        </div>
+
+        <div className="history-primary-metric">
+          <span>Similitud textual</span>
+
+          <strong>
+            {formatScore(bestRankingScore)}
+          </strong>
+        </div>
+
+        <div>
+          <span>Candidatos registrados</span>
+
+          <strong>{matches.length}</strong>
         </div>
       </div>
 
-      <div className="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Pos.</th>
-              <th>Documento candidato</th>
-              <th>Score final</th>
-              <th>Texto</th>
-              <th>SBERT</th>
-              <th>Layout</th>
-              <th>PII</th>
-              <th>Se?al</th>
-              <th>Explicaci?n</th>
-            </tr>
-          </thead>
-          <tbody>
-            {matches.map((match, index) => (
-              <tr key={`${match.document_id}-${index}`}>
-                <td>{index + 1}</td>
-                <td className="doc-name" title={match.filename}>
-                  {match.filename}
-                </td>
-                <td>
-                  <span className="score-highlight">
-                    {formatScore(match.scores?.final_score)}
-                  </span>
-                </td>
-                <td>{formatScore(match.scores?.text_score)}</td>
-                <td>{formatScore(match.scores?.semantic_text_score)}</td>
-                <td>{formatScore(match.scores?.layout_score)}</td>
-                <td>{formatScore(match.scores?.pii_score)}</td>
-                <td>
-                  <SignalBadge explanation={match.analyst_explanation} />
-                </td>
-                <td>
-                  <MatchExplanation explanation={match.analyst_explanation} />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="history-context-note">
+        <strong>Interpretación</strong>
+
+        <p>
+          Los candidatos fueron ordenados por similitud textual.
+          La información de layout y contexto PII se conserva como
+          evidencia auxiliar para apoyar la revisión.
+        </p>
+      </div>
+
+      <details className="technical-details">
+        <summary>
+          Ver información técnica del caso
+        </summary>
+
+        <div className="technical-grid">
+          <div>
+            <span>Tipo de archivo</span>
+            <strong>{item.file_type || "—"}</strong>
+          </div>
+
+          <div>
+            <span>PII detectada</span>
+            <strong>{item.pii_count ?? 0}</strong>
+          </div>
+
+          <div>
+            <span>Latencia</span>
+            <strong>
+              {item.latency_ms
+                ? `${item.latency_ms} ms`
+                : "No disponible"}
+            </strong>
+          </div>
+
+          <div>
+            <span>Fecha</span>
+            <strong>{formatDate(item.created_at)}</strong>
+          </div>
+        </div>
+      </details>
+
+      <div className="history-ranking-section">
+        <div className="history-ranking-heading">
+          <div>
+            <strong>
+              Candidatos del análisis
+            </strong>
+
+            <p>
+              Ranking almacenado para este caso.
+            </p>
+          </div>
+
+          <span>
+            {matches.length} resultado
+            {matches.length === 1 ? "" : "s"}
+          </span>
+        </div>
+
+        {matches.length === 0 ? (
+          <div className="history-empty">
+            <strong>No hay candidatos almacenados</strong>
+            <p>
+              Este registro no contiene un ranking disponible para mostrar.
+            </p>
+          </div>
+        ) : (
+          <div className="candidate-list">
+            {matches.map((match, index) => {
+              /*
+               * Compatibilidad con análisis anteriores al contrato
+               * productivo oe3_production_v1.
+               */
+              const rankingScore =
+                match.scores?.ranking_score ??
+                match.scores?.text_score ??
+                match.scores?.final_score ??
+                0;
+
+              const piiContextScore =
+                match.scores?.pii_context_score ??
+                match.scores?.pii_score;
+
+              const numericScore = Number(rankingScore) || 0;
+
+              const scoreWidth = Math.max(
+                0,
+                Math.min(100, numericScore * 100)
+              );
+
+              return (
+                <article
+                  className={`candidate-card ${
+                    index === 0 ? "candidate-card-best" : ""
+                  }`}
+                  key={`${match.document_id}-${index}`}
+                >
+                  <div className="candidate-header">
+                    <div className="candidate-position">
+                      #{index + 1}
+                    </div>
+
+                    <div className="candidate-document">
+                      <span>
+                        {index === 0
+                          ? "Primer candidato"
+                          : "Candidato registrado"}
+                      </span>
+
+                      <strong title={match.filename}>
+                        {match.filename}
+                      </strong>
+                    </div>
+
+                    {index === 0 && (
+                      <span className="candidate-best-badge">
+                        Mayor similitud
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="candidate-main-score">
+                    <div>
+                      <span>Similitud textual</span>
+
+                      <strong>
+                        {formatScore(rankingScore)}
+                      </strong>
+                    </div>
+
+                    <div className="score-meter">
+                      <div
+                        className="score-meter-fill"
+                        style={{
+                          width: `${scoreWidth}%`,
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="candidate-auxiliary">
+                    <div>
+                      <span>Estructura visual</span>
+
+                      <strong>
+                        {formatScore(
+                          match.scores?.layout_score
+                        )}
+                      </strong>
+
+                      <small>Auxiliar</small>
+                    </div>
+
+                    <div>
+                      <span>Contexto PII</span>
+
+                      <strong>
+                        {formatScore(piiContextScore)}
+                      </strong>
+
+                      <small>Auxiliar</small>
+                    </div>
+                  </div>
+
+                  {match.analyst_explanation?.explanation && (
+                    <details className="candidate-details">
+                      <summary>
+                        Ver explicación registrada
+                      </summary>
+
+                      <div className="candidate-explanation">
+                        <p>
+                          {match.analyst_explanation.explanation}
+                        </p>
+                      </div>
+                    </details>
+                  )}
+                </article>
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -1607,22 +2425,7 @@ function getBestOverallMethod(rows) {
 
   return sortedRows[0];
 }
-function ScoreBar({ label, value }) {
-  const numericValue = Number(value || 0);
-  const percentage = Math.max(0, Math.min(100, numericValue * 100));
 
-  return (
-    <div className="score-bar">
-      <div>
-        <span>{label}</span>
-        <strong>{formatScore(value)}</strong>
-      </div>
-      <div className="bar-track">
-        <div className="bar-fill" style={{ width: `${percentage}%` }} />
-      </div>
-    </div>
-  );
-}
 
 function formatScore(value) {
   if (value === null || value === undefined || Number.isNaN(Number(value))) {
@@ -1667,6 +2470,23 @@ function formatExtractionMode(value) {
   };
 
   return labels[value] || value;
+}
+function formatFileSize(bytes) {
+  const value = Number(bytes);
+
+  if (!Number.isFinite(value) || value <= 0) {
+    return "Tamaño no disponible";
+  }
+
+  if (value < 1024) {
+    return `${value} B`;
+  }
+
+  if (value < 1024 * 1024) {
+    return `${(value / 1024).toFixed(1)} KB`;
+  }
+
+  return `${(value / (1024 * 1024)).toFixed(1)} MB`;
 }
 function formatDate(value) {
   if (!value) return "—";
